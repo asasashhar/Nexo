@@ -1,0 +1,324 @@
+import React, { useRef, useState } from 'react';
+import { Upload, X, Image as ImageIcon, RefreshCw, FolderOpen, Link as LinkIcon, Check } from 'lucide-react';
+import { usePortfolio } from '../../context/PortfolioContext';
+import { processImageFile } from '../../lib/imageUtils';
+
+interface ImageUploadFieldProps {
+  label: string;
+  value: string;
+  onChange: (url: string) => void;
+  sublabel?: string;
+  helperText?: string;
+  aspectRatio?: 'video' | 'square' | 'portrait' | 'wide' | 'auto';
+  required?: boolean;
+  className?: string;
+}
+
+export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
+  label,
+  value,
+  onChange,
+  sublabel,
+  helperText = 'Supports PNG, JPG, WebP, GIF, SVG (up to 15MB)',
+  aspectRatio = 'wide',
+  required = false,
+  className = '',
+}) => {
+  const { media, addMedia } = usePortfolio();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [showMediaPicker, setShowMediaPicker] = useState(false);
+  const [showUrlInput, setShowUrlInput] = useState(false);
+  const [customUrl, setCustomUrl] = useState('');
+  const [uploadError, setUploadError] = useState<string | null>(null);
+
+  const handleFileSelect = async (files: FileList | null) => {
+    if (!files || files.length === 0) return;
+    const file = files[0];
+    if (!file.type.startsWith('image/')) {
+      setUploadError('Please select a valid image file (PNG, JPG, WebP, SVG, GIF).');
+      return;
+    }
+
+    setUploadError(null);
+    setIsProcessing(true);
+
+    try {
+      const processed = await processImageFile(file);
+      onChange(processed.dataUrl);
+
+      // Register into Media Library so it's tracked
+      addMedia({
+        id: `media-${Date.now()}`,
+        name: processed.name,
+        url: processed.dataUrl,
+        size: processed.sizeFormatted,
+        type: processed.type,
+        uploadedAt: new Date().toISOString().slice(0, 10),
+        usageCount: 1,
+      });
+    } catch (err) {
+      console.error('Image processing failed:', err);
+      setUploadError('Failed to process image. Please try another file.');
+    } finally {
+      setIsProcessing(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    handleFileSelect(e.dataTransfer.files);
+  };
+
+  const handleApplyCustomUrl = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (customUrl.trim()) {
+      onChange(customUrl.trim());
+      setCustomUrl('');
+      setShowUrlInput(false);
+    }
+  };
+
+  const aspectClass = {
+    video: 'aspect-video max-h-48',
+    wide: 'h-44',
+    square: 'aspect-square max-h-44',
+    portrait: 'aspect-[3/4] max-h-56',
+    auto: 'min-h-[140px] max-h-60',
+  }[aspectRatio];
+
+  return (
+    <div className={`space-y-2 text-xs ${className}`}>
+      {/* Label Bar */}
+      <div className="flex items-center justify-between">
+        <label className="block font-semibold text-[#1F2A37]">
+          {label} {required && <span className="text-[#F2685F]">*</span>}
+          {sublabel && <span className="font-normal text-gray-500 ml-1.5">{sublabel}</span>}
+        </label>
+
+        <div className="flex items-center gap-2">
+          {media.length > 0 && (
+            <button
+              type="button"
+              onClick={() => setShowMediaPicker(!showMediaPicker)}
+              className="text-[11px] text-[#37B294] hover:text-[#2d9178] font-medium flex items-center gap-1 cursor-pointer"
+            >
+              <FolderOpen className="w-3.5 h-3.5" />
+              <span>Browse Library</span>
+            </button>
+          )}
+
+          <button
+            type="button"
+            onClick={() => setShowUrlInput(!showUrlInput)}
+            className="text-[11px] text-gray-400 hover:text-gray-600 flex items-center gap-1 cursor-pointer"
+          >
+            <LinkIcon className="w-3 h-3" />
+            <span>{showUrlInput ? 'Hide URL' : 'Use URL'}</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Hidden File Input */}
+      <input
+        type="file"
+        ref={fileInputRef}
+        accept="image/*"
+        className="hidden"
+        onChange={(e) => handleFileSelect(e.target.files)}
+      />
+
+      {/* Image Preview or Upload Button Zone */}
+      {value ? (
+        <div className="relative rounded-2xl overflow-hidden border-2 border-[#E8F7F2] bg-[#F7FCFA] shadow-xs group">
+          <div className={`${aspectClass} w-full flex items-center justify-center p-2 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:12px_12px]`}>
+            <img
+              src={value}
+              alt="Preview"
+              className="max-h-full max-w-full object-contain rounded-xl shadow-xs transition-transform group-hover:scale-[1.01]"
+              onError={(e) => {
+                // Keep image box but indicate fallback
+                (e.currentTarget as HTMLImageElement).classList.add('opacity-40');
+              }}
+            />
+          </div>
+
+          {/* Quick Action Overlay Controls */}
+          <div className="p-2.5 bg-white border-t border-gray-100 flex items-center justify-between gap-2">
+            <div className="flex items-center gap-1.5 text-[11px] text-emerald-700 font-medium truncate">
+              <Check className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" />
+              <span className="truncate">Image selected</span>
+            </div>
+
+            <div className="flex items-center gap-1.5">
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={isProcessing}
+                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-[#E8F7F2] text-[#37B294] hover:bg-[#d4f2e7] font-semibold text-[11px] transition-colors cursor-pointer"
+              >
+                <RefreshCw className={`w-3 h-3 ${isProcessing ? 'animate-spin' : ''}`} />
+                <span>Replace Image</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => onChange('')}
+                className="p-1.5 rounded-full text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors cursor-pointer"
+                title="Remove image"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : (
+        /* Upload Button Dropzone */
+        <div
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+          className={`border-2 border-dashed rounded-2xl p-5 text-center transition-all flex flex-col items-center justify-center gap-2.5 ${
+            isDragging
+              ? 'border-[#4CC9A7] bg-[#E8F7F2]/50 scale-[1.01]'
+              : 'border-gray-200 bg-[#F9FBFA] hover:border-[#4CC9A7] hover:bg-[#F2FAF7]'
+          }`}
+        >
+          <div className="w-12 h-12 rounded-2xl bg-[#E8F7F2] text-[#37B294] flex items-center justify-center shadow-xs">
+            <Upload className={`w-6 h-6 ${isProcessing ? 'animate-bounce' : ''}`} />
+          </div>
+
+          <div>
+            <p className="text-xs font-bold text-[#1F2A37]">
+              {isProcessing ? 'Processing image...' : 'Upload Image from Device'}
+            </p>
+            <p className="text-[11px] text-[#9CA3AF] mt-0.5">{helperText}</p>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={isProcessing}
+              className="inline-flex items-center gap-1.5 px-5 py-2 rounded-full bg-[#4CC9A7] hover:bg-[#37B294] text-white text-xs font-semibold shadow-xs transition-all cursor-pointer hover:shadow-md active:scale-95"
+            >
+              <Upload className="w-3.5 h-3.5" />
+              <span>Choose Image File</span>
+            </button>
+
+            {media.length > 0 && (
+              <button
+                type="button"
+                onClick={() => setShowMediaPicker(true)}
+                className="inline-flex items-center gap-1 px-3.5 py-2 rounded-full border border-gray-200 text-[#1F2A37] hover:bg-white text-xs font-medium transition-colors cursor-pointer"
+              >
+                <FolderOpen className="w-3.5 h-3.5 text-[#37B294]" />
+                <span>Pick Existing</span>
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Upload Error Banner */}
+      {uploadError && (
+        <p className="text-[11px] text-red-500 font-medium px-2">{uploadError}</p>
+      )}
+
+      {/* Optional Collapsible URL Input fallback */}
+      {showUrlInput && (
+        <form onSubmit={handleApplyCustomUrl} className="flex gap-2 pt-1">
+          <input
+            type="url"
+            value={customUrl}
+            onChange={(e) => setCustomUrl(e.target.value)}
+            placeholder="Paste external image link (https://...)"
+            className="flex-1 text-xs px-3 py-2 rounded-xl border border-gray-200 outline-none focus:border-[#4CC9A7]"
+          />
+          <button
+            type="submit"
+            className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-[#1F2A37] text-xs font-semibold rounded-xl cursor-pointer"
+          >
+            Apply
+          </button>
+        </form>
+      )}
+
+      {/* Media Picker Modal / Drawer */}
+      {showMediaPicker && (
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-5 shadow-2xl border border-[#D8F2E9] max-h-[85vh] flex flex-col">
+            <div className="flex items-center justify-between pb-3 border-b border-gray-100 mb-3">
+              <div>
+                <h4 className="text-sm font-bold text-[#1F2A37]">Select From Media Library</h4>
+                <p className="text-[11px] text-[#9CA3AF]">
+                  Choose any image previously added to your portfolio
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowMediaPicker(false)}
+                className="p-1 rounded-full text-gray-400 hover:text-gray-600 cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="overflow-y-auto flex-1 grid grid-cols-2 sm:grid-cols-3 gap-3 p-1">
+              {media.map((item) => (
+                <div
+                  key={item.id}
+                  onClick={() => {
+                    onChange(item.url);
+                    setShowMediaPicker(false);
+                  }}
+                  className="group rounded-xl border border-gray-200 hover:border-[#4CC9A7] overflow-hidden cursor-pointer p-1.5 bg-[#F7FCFA] hover:shadow-md transition-all flex flex-col items-center"
+                >
+                  <div className="w-full h-24 rounded-lg overflow-hidden bg-white flex items-center justify-center">
+                    <img
+                      src={item.url}
+                      alt={item.name}
+                      className="max-h-full max-w-full object-cover group-hover:scale-105 transition-transform"
+                    />
+                  </div>
+                  <span className="text-[10px] font-semibold text-[#1F2A37] truncate w-full text-center mt-1.5 px-1">
+                    {item.name}
+                  </span>
+                  <span className="text-[9px] text-gray-400">{item.size}</span>
+                </div>
+              ))}
+            </div>
+
+            <div className="pt-3 border-t border-gray-100 flex justify-end">
+              <button
+                type="button"
+                onClick={() => setShowMediaPicker(false)}
+                className="px-4 py-1.5 rounded-full border border-gray-200 text-xs font-semibold text-[#1F2A37]"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};

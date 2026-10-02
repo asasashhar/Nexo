@@ -1,0 +1,91 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #4CC9A7;
+  --color-primary-dark: #37B294;
+  --color-primary-soft: #E8F7F2;
+  --color-primary-tint: #D8F2E9;
+
+  --color-accent: #F2685F;
+  --color-accent-dark: #E0524A;
+  --color-accent-soft: #FDECEA;
+
+  --color-teal: #4CC9A7;
+  --color-teal-dark: #2D9A7A;
+  --color-teal-soft: #E8F7F2;
+
+  --color-ink: #1F2A37;
+  --color-ink-body: #4B5563;
+  --color-ink-muted: #9CA3AF;
+
+  --color-page: #FAF9F5;
+  --color-card-border: #E8F7F2;
+  --color-star: #F59E0B;
+
+  --font-sans: 'Plus Jakarta Sans', 'Poppins', sans-serif;
+  --font-script: 'Caveat', cursive;
+
+  --shadow-soft-card: 0 10px 30px -5px rgba(76, 201, 167, 0.08), 0 4px 12px -2px rgba(0, 0, 0, 0.03);
+  --shadow-float-badge: 0 16px 32px -4px rgba(31, 42, 55, 0.08);
+}
+
+@layer base {
+  body {
+    background-color: #FAF9F5;
+    color: #4B5552;
+    font-family: 'Plus Jakarta Sans', 'Poppins', sans-serif;
+  }
+}
+
+.font-script {
+  font-family: 'Caveat', cursive;
+}
+
+@keyframes wave {
+  0% { transform: rotate(0deg); }
+  10% { transform: rotate(14deg); }
+  20% { transform: rotate(-8deg); }
+  30% { transform: rotate(14deg); }
+  40% { transform: rotate(-4deg); }
+  50% { transform: rotate(10deg); }
+  60% { transform: rotate(0deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.animate-wave {
+  animation: wave 2.2s infinite;
+  transform-origin: 70% 70%;
+  display: inline-block;
+}
+
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.animate-float {
+  animation: floatSlow 4.5s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: floatSlow 5.2s ease-in-out infinite 2s;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #FAF9F5;
+}
+::-webkit-scrollbar-thumb {
+  background: #D8D6CE;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #B6B4AC;
+}
