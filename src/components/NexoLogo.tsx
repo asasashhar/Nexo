@@ -105,14 +105,14 @@ export const NexoLogo: React.FC<NexoLogoProps> = ({
         </svg>
       </div>
 
-      {/* Optional Wordmark only when explicitly requested (defaults to false as requested: "not add teh texts") */}
+      {/* Optional Wordmark only when explicitly requested */}
       {showText && (
         <div className="flex flex-col leading-none">
-          <span className="text-xl font-extrabold tracking-widest text-[#1F2A37] font-sans">
+          <span className="text-xl font-black tracking-[0.25em] text-white font-sans">
             NEXO
           </span>
           {showTagline && (
-            <span className="text-[10px] tracking-widest uppercase font-semibold text-[#8C9793] mt-1">
+            <span className="text-[10px] tracking-[0.2em] uppercase font-bold text-[#00E599] mt-1">
               Ideas to Impact
             </span>
           )}

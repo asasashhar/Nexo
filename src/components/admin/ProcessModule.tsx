@@ -38,7 +38,7 @@ export const ProcessModule: React.FC<ProcessModuleProps> = ({ onShowToast }) => 
   } = usePortfolio();
 
   // Header settings state
-  const [procTitle, setProcTitle] = useState(profile.processTitle || 'Our Design');
+  const [procTitle, setProcTitle] = useState(profile.processTitle || 'Our Creative');
   const [procHighlight, setProcHighlight] = useState(profile.processHighlightedWord || 'Process');
   const [procSubtitle, setProcSubtitle] = useState(
     profile.processSubtitle || 'A clear and collaborative approach from idea to impact.'
@@ -68,11 +68,11 @@ export const ProcessModule: React.FC<ProcessModuleProps> = ({ onShowToast }) => 
     e.preventDefault();
     setProfile({
       ...profile,
-      processTitle: procTitle.trim() || 'Our Design',
+      processTitle: procTitle.trim() || 'Our Creative',
       processHighlightedWord: procHighlight.trim() || 'Process',
       processSubtitle: procSubtitle.trim() || 'A clear and collaborative approach from idea to impact.',
     });
-    onShowToast('Header Saved', 'Our Design Process section headline and subtitle updated.');
+    onShowToast('Header Saved', 'Creative Process section headline and subtitle updated.');
   };
 
   const handleOpenAdd = () => {
@@ -109,10 +109,10 @@ export const ProcessModule: React.FC<ProcessModuleProps> = ({ onShowToast }) => 
         icon,
         ringColor,
       });
-      onShowToast('Step Updated', `Step ${number} "${title}" was updated.`);
+      onShowToast('Step Updated', `Phase ${number} (${title}) updated.`);
     } else {
       addProcessStep({
-        id: `step-${Date.now()}`,
+        id: `proc-${Date.now()}`,
         number,
         title: title.trim(),
         desc: desc.trim(),
@@ -120,7 +120,7 @@ export const ProcessModule: React.FC<ProcessModuleProps> = ({ onShowToast }) => 
         ringColor,
         order: processSteps.length + 1,
       });
-      onShowToast('Step Added', `Step ${number} "${title}" added to process timeline.`);
+      onShowToast('Step Added', `New phase ${number} (${title}) added.`);
     }
     setModalOpen(false);
   };
@@ -181,24 +181,24 @@ export const ProcessModule: React.FC<ProcessModuleProps> = ({ onShowToast }) => 
 
   const handleRestoreDefaults = () => {
     if (
-      window.confirm('Reset the design process back to the original 6 standard methodology steps?')
+      window.confirm('Reset the creative process back to standard methodology steps?')
     ) {
       setProcessSteps(INITIAL_PROCESS_STEPS);
-      setProcTitle('Our Design');
+      setProcTitle('Our Creative');
       setProcHighlight('Process');
       setProcSubtitle('A clear and collaborative approach from idea to impact.');
       setProfile({
         ...profile,
-        processTitle: 'Our Design',
+        processTitle: 'Our Creative',
         processHighlightedWord: 'Process',
         processSubtitle: 'A clear and collaborative approach from idea to impact.',
       });
-      onShowToast('Restored Defaults', 'Reset to the standard 6 design process steps.');
+      onShowToast('Restored Defaults', 'Reset to the standard design process steps.');
     }
   };
 
   const renderIcon = (name: string, isCoral: boolean) => {
-    const cls = `w-5 h-5 ${isCoral ? 'text-[#F2685F]' : 'text-[#4CC9A7]'}`;
+    const cls = `w-5 h-5 ${isCoral ? 'text-[#FF5A36]' : 'text-[#00E599]'}`;
     switch (name) {
       case 'Zap':
         return <Zap className={cls} />;
@@ -218,20 +218,20 @@ export const ProcessModule: React.FC<ProcessModuleProps> = ({ onShowToast }) => 
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 text-white">
       {/* 1. Header & Section Titles Customizer */}
-      <div className="bg-white rounded-3xl p-6 border border-[#E8F7F2] shadow-xs">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <span className="p-2 rounded-xl bg-[#E8F7F2] text-[#4CC9A7]">
+      <div className="bg-[#0F1522] rounded-3xl p-6 sm:p-7 border border-slate-800 shadow-xl">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5 border-b border-slate-800 pb-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-[#00E599]/15 text-[#00E599] flex items-center justify-center border border-[#00E599]/30">
               <Sparkles className="w-5 h-5" />
-            </span>
+            </div>
             <div>
-              <h2 className="text-base font-bold text-[#1F2A37]">
-                Design Process Section Header
+              <h2 className="text-base font-bold text-white font-sans">
+                Creative Process Section Header
               </h2>
-              <p className="text-xs text-[#6B7280]">
-                Customize the headline text, highlighted cursive word, and subtitle for this section.
+              <p className="text-xs text-slate-400">
+                Customize the headline text, highlighted script word, and subtitle for this section.
               </p>
             </div>
           </div>
@@ -239,10 +239,10 @@ export const ProcessModule: React.FC<ProcessModuleProps> = ({ onShowToast }) => 
           <button
             type="button"
             onClick={handleRestoreDefaults}
-            className="inline-flex items-center gap-1.5 text-xs text-[#6B7280] hover:text-[#1F2A37] border border-gray-200 px-3 py-1.5 rounded-full hover:bg-gray-50 transition-colors cursor-pointer"
-            title="Restore original 6 steps"
+            className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-white border border-slate-700 px-3.5 py-1.5 rounded-full hover:bg-slate-800 transition-colors cursor-pointer self-start sm:self-auto"
+            title="Restore original steps"
           >
-            <RotateCcw className="w-3.5 h-3.5 text-[#4CC9A7]" />
+            <RotateCcw className="w-3.5 h-3.5 text-[#00E599]" />
             <span>Reset 6 Steps</span>
           </button>
         </div>
@@ -250,34 +250,34 @@ export const ProcessModule: React.FC<ProcessModuleProps> = ({ onShowToast }) => 
         <form onSubmit={handleSaveHeader} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-[#1F2A37] mb-1">
+              <label className="block text-xs font-semibold text-slate-300 mb-1">
                 Headline Base Text
               </label>
               <input
                 type="text"
                 value={procTitle}
                 onChange={(e) => setProcTitle(e.target.value)}
-                placeholder="My Design"
-                className="w-full text-xs px-3.5 py-2.5 rounded-xl border border-gray-200 focus:border-[#4CC9A7] focus:ring-1 focus:ring-[#4CC9A7] outline-none"
+                placeholder="Our Creative"
+                className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-[#080B11] border border-slate-700 text-white focus:border-[#00E599] outline-none"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#1F2A37] mb-1">
-                Highlighted Cursive Word (Teal Script)
+              <label className="block text-xs font-semibold text-slate-300 mb-1">
+                Highlighted Word (Emerald Accent)
               </label>
               <input
                 type="text"
                 value={procHighlight}
                 onChange={(e) => setProcHighlight(e.target.value)}
                 placeholder="Process"
-                className="w-full text-xs px-3.5 py-2.5 rounded-xl border border-gray-200 focus:border-[#4CC9A7] focus:ring-1 focus:ring-[#4CC9A7] outline-none"
+                className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-[#080B11] border border-slate-700 text-white focus:border-[#00E599] outline-none"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-[#1F2A37] mb-1">
+            <label className="block text-xs font-semibold text-slate-300 mb-1">
               Section Subtitle
             </label>
             <input
@@ -285,14 +285,14 @@ export const ProcessModule: React.FC<ProcessModuleProps> = ({ onShowToast }) => 
               value={procSubtitle}
               onChange={(e) => setProcSubtitle(e.target.value)}
               placeholder="A clear and collaborative approach from idea to impact."
-              className="w-full text-xs px-3.5 py-2.5 rounded-xl border border-gray-200 focus:border-[#4CC9A7] focus:ring-1 focus:ring-[#4CC9A7] outline-none"
+              className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-[#080B11] border border-slate-700 text-white focus:border-[#00E599] outline-none"
             />
           </div>
 
           <div className="flex justify-end pt-1">
             <button
               type="submit"
-              className="inline-flex items-center gap-1.5 bg-[#4CC9A7] hover:bg-[#37B294] text-white text-xs font-semibold px-5 py-2.5 rounded-full shadow-xs hover:shadow transition-all cursor-pointer"
+              className="inline-flex items-center gap-1.5 bg-[#00E599] hover:bg-[#00B377] text-black text-xs font-bold px-6 py-2.5 rounded-full shadow-[0_0_15px_rgba(0,229,153,0.3)] transition-all cursor-pointer"
             >
               <Save className="w-3.5 h-3.5" />
               <span>Save Header Details</span>
@@ -302,36 +302,35 @@ export const ProcessModule: React.FC<ProcessModuleProps> = ({ onShowToast }) => 
       </div>
 
       {/* 2. Interactive Live Preview */}
-      <div className="bg-[#FAF9F5] rounded-3xl p-6 sm:p-8 border border-[#E8E6DF] relative overflow-hidden">
+      <div className="bg-[#0F1522] rounded-3xl p-6 sm:p-8 border border-slate-800 shadow-xl relative overflow-hidden">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2">
-            <Eye className="w-4 h-4 text-[#4CC9A7]" />
-            <span className="text-xs font-bold text-[#1F2A37] uppercase tracking-wider">
+            <Eye className="w-4 h-4 text-[#00E599]" />
+            <span className="text-xs font-bold text-white uppercase tracking-wider font-mono">
               Live Timeline Preview
             </span>
           </div>
-          <span className="text-xs text-[#9CA3AF]">
-            {sortedSteps.length} Steps Active
+          <span className="text-xs text-slate-400 font-mono">
+            {sortedSteps.length} Active Steps
           </span>
         </div>
 
         {/* Section Header preview */}
         <div className="text-center mb-10">
-          <h3 className="text-2xl sm:text-3xl font-bold text-[#1F2A37]">
+          <h3 className="text-2xl sm:text-3xl font-black text-white font-sans">
             {procTitle}{' '}
-            <span className="font-script text-[#4CC9A7] text-3xl sm:text-4xl">
+            <span className="text-[#00E599] underline decoration-[#00E599]/40 underline-offset-8">
               {procHighlight}
-            </span>{' '}
-            <span className="text-[#F2685F] text-xl select-none inline-block animate-pulse">♡</span>
+            </span>
           </h3>
-          <p className="text-xs text-[#9CA3AF] mt-1.5 max-w-md mx-auto">
+          <p className="text-xs text-slate-400 mt-2 max-w-md mx-auto">
             {procSubtitle}
           </p>
         </div>
 
         {/* Dashed connector timeline */}
         <div className="relative">
-          <div className="hidden lg:block absolute top-7 left-8 right-8 h-0.5 border-t-2 border-dashed border-[#A1E8D2] -z-0" />
+          <div className="hidden lg:block absolute top-7 left-8 right-8 h-0.5 border-t-2 border-dashed border-slate-700 -z-0" />
 
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-y-8 gap-x-3 relative z-10">
             {sortedSteps.map((step) => {
@@ -339,19 +338,25 @@ export const ProcessModule: React.FC<ProcessModuleProps> = ({ onShowToast }) => 
               return (
                 <div key={step.id} className="flex flex-col items-center text-center">
                   <div
-                    className={`w-14 h-14 rounded-full bg-white border-2 flex items-center justify-center shadow-xs transition-transform hover:scale-105 ${
-                      isCoral ? 'border-[#F2685F] text-[#F2685F]' : 'border-[#4CC9A7] text-[#4CC9A7]'
+                    className={`w-14 h-14 rounded-2xl bg-[#080B11] border-2 flex items-center justify-center shadow-lg transition-transform hover:scale-110 ${
+                      isCoral
+                        ? 'border-[#FF5A36] text-[#FF5A36] shadow-[0_0_15px_rgba(255,90,54,0.2)]'
+                        : 'border-[#00E599] text-[#00E599] shadow-[0_0_15px_rgba(0,229,153,0.2)]'
                     }`}
                   >
                     {renderIcon(step.icon, isCoral)}
                   </div>
-                  <span className="text-xs font-bold text-[#F2685F] mt-2 tracking-wider">
+                  <span
+                    className={`text-xs font-mono font-bold mt-2.5 tracking-wider ${
+                      isCoral ? 'text-[#FF5A36]' : 'text-[#00E599]'
+                    }`}
+                  >
                     {step.number}
                   </span>
-                  <h4 className="text-xs font-bold text-[#1F2A37] mt-0.5">
+                  <h4 className="text-xs font-bold text-white mt-0.5 font-sans">
                     {step.title}
                   </h4>
-                  <p className="text-[11px] text-[#6B7280] leading-relaxed mt-1 max-w-[150px]">
+                  <p className="text-[11px] text-slate-400 leading-relaxed mt-1 max-w-[150px]">
                     {step.desc}
                   </p>
                 </div>
@@ -363,20 +368,20 @@ export const ProcessModule: React.FC<ProcessModuleProps> = ({ onShowToast }) => 
 
       {/* 3. Steps List & Management */}
       <div className="space-y-4">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h3 className="text-lg font-bold text-[#1F2A37]">
+            <h3 className="text-lg font-bold text-white font-sans">
               Manage Timeline Steps ({processSteps.length})
             </h3>
-            <p className="text-xs text-[#6B7280]">
-              Add new phases, edit descriptions, adjust icons, and alternate teal or coral rings.
+            <p className="text-xs text-slate-400">
+              Add new phases, edit descriptions, adjust icons, and alternate emerald or coral rings.
             </p>
           </div>
 
           <button
             type="button"
             onClick={handleOpenAdd}
-            className="inline-flex items-center gap-1.5 bg-[#4CC9A7] hover:bg-[#37B294] text-white text-xs font-semibold px-4 py-2 rounded-full transition-all shadow-xs hover:shadow cursor-pointer"
+            className="inline-flex items-center gap-1.5 bg-[#00E599] hover:bg-[#00B377] text-black text-xs font-bold px-5 py-2.5 rounded-full transition-all shadow-[0_0_15px_rgba(0,229,153,0.3)] cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             <span>Add Process Step</span>
@@ -390,13 +395,13 @@ export const ProcessModule: React.FC<ProcessModuleProps> = ({ onShowToast }) => 
             return (
               <div
                 key={step.id}
-                className="bg-white rounded-3xl p-5 border border-[#E8F7F2] shadow-xs flex flex-col justify-between hover:shadow-sm transition-shadow"
+                className="bg-[#0F1522] rounded-3xl p-5 border border-slate-800 shadow-xl flex flex-col justify-between hover:border-slate-700 transition-all"
               >
                 <div>
                   <div className="flex items-center justify-between mb-3">
                     <div
-                      className={`w-12 h-12 rounded-full bg-white flex items-center justify-center border-2 ${
-                        isCoral ? 'border-[#F2685F]' : 'border-[#4CC9A7]'
+                      className={`w-12 h-12 rounded-xl bg-[#080B11] flex items-center justify-center border-2 ${
+                        isCoral ? 'border-[#FF5A36]' : 'border-[#00E599]'
                       }`}
                     >
                       {renderIcon(step.icon, isCoral)}
@@ -408,8 +413,8 @@ export const ProcessModule: React.FC<ProcessModuleProps> = ({ onShowToast }) => 
                         type="button"
                         onClick={() => handleMove(idx, 'up')}
                         disabled={idx === 0}
-                        className="p-1 text-gray-400 hover:text-[#4CC9A7] disabled:opacity-30 rounded transition-colors"
-                        title="Move Left / Earlier"
+                        className="p-1 text-slate-400 hover:text-[#00E599] disabled:opacity-20 rounded transition-colors cursor-pointer"
+                        title="Move Earlier"
                       >
                         <ArrowUp className="w-3.5 h-3.5" />
                       </button>
@@ -417,15 +422,15 @@ export const ProcessModule: React.FC<ProcessModuleProps> = ({ onShowToast }) => 
                         type="button"
                         onClick={() => handleMove(idx, 'down')}
                         disabled={idx === sortedSteps.length - 1}
-                        className="p-1 text-gray-400 hover:text-[#4CC9A7] disabled:opacity-30 rounded transition-colors"
-                        title="Move Right / Later"
+                        className="p-1 text-slate-400 hover:text-[#00E599] disabled:opacity-20 rounded transition-colors cursor-pointer"
+                        title="Move Later"
                       >
                         <ArrowDown className="w-3.5 h-3.5" />
                       </button>
                       <button
                         type="button"
                         onClick={() => handleOpenEdit(step)}
-                        className="p-1.5 text-gray-400 hover:text-[#4CC9A7] rounded-lg transition-colors cursor-pointer"
+                        className="p-1.5 text-slate-400 hover:text-white rounded-lg transition-colors cursor-pointer"
                         title="Edit Step"
                       >
                         <Edit className="w-3.5 h-3.5" />
@@ -433,7 +438,7 @@ export const ProcessModule: React.FC<ProcessModuleProps> = ({ onShowToast }) => 
                       <button
                         type="button"
                         onClick={() => handleDelete(step.id, step.title)}
-                        className="p-1.5 text-gray-400 hover:text-red-500 rounded-lg transition-colors cursor-pointer"
+                        className="p-1.5 text-slate-400 hover:text-red-400 rounded-lg transition-colors cursor-pointer"
                         title="Delete Step"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -441,22 +446,24 @@ export const ProcessModule: React.FC<ProcessModuleProps> = ({ onShowToast }) => 
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-1.5 mb-1">
+                  <div className="flex items-center gap-2 mb-1.5">
                     <span
-                      className={`text-xs font-bold ${
-                        isCoral ? 'text-[#F2685F]' : 'text-[#4CC9A7]'
+                      className={`text-xs font-mono font-bold px-2 py-0.5 rounded-md ${
+                        isCoral
+                          ? 'bg-[#FF5A36]/15 text-[#FF5A36] border border-[#FF5A36]/30'
+                          : 'bg-[#00E599]/15 text-[#00E599] border border-[#00E599]/30'
                       }`}
                     >
-                      {step.number}
+                      Phase {step.number}
                     </span>
-                    <h4 className="text-sm font-bold text-[#1F2A37]">{step.title}</h4>
+                    <h4 className="text-sm font-bold text-white font-sans">{step.title}</h4>
                   </div>
 
-                  <p className="text-xs text-[#6B7280] leading-relaxed">{step.desc}</p>
+                  <p className="text-xs text-slate-300 leading-relaxed">{step.desc}</p>
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between text-[11px] text-[#9CA3AF]">
-                  <span className="capitalize">Ring: {step.ringColor}</span>
+                <div className="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between text-[11px] text-slate-500 font-mono">
+                  <span className="capitalize">Theme: {step.ringColor}</span>
                   <span>Icon: {step.icon}</span>
                 </div>
               </div>
@@ -467,16 +474,16 @@ export const ProcessModule: React.FC<ProcessModuleProps> = ({ onShowToast }) => 
 
       {/* Add / Edit Step Modal */}
       {modalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-xl border border-gray-100 animate-in fade-in zoom-in-95">
-            <div className="flex items-center justify-between pb-3 border-b border-gray-100 mb-4">
-              <h3 className="font-bold text-base text-[#1F2A37]">
-                {editingStep ? `Edit Step ${editingStep.number}` : 'Add Process Step'}
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs">
+          <div className="bg-[#0F1522] rounded-3xl max-w-md w-full p-6 sm:p-7 shadow-2xl border border-slate-700 text-white animate-in fade-in zoom-in-95">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-800 mb-4">
+              <h3 className="font-bold text-base text-white font-sans">
+                {editingStep ? `Edit Phase ${editingStep.number}` : 'Add Process Phase'}
               </h3>
               <button
                 type="button"
                 onClick={() => setModalOpen(false)}
-                className="p-1.5 text-gray-400 hover:text-gray-600 rounded-lg"
+                className="p-1.5 text-slate-400 hover:text-white rounded-lg cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -485,65 +492,65 @@ export const ProcessModule: React.FC<ProcessModuleProps> = ({ onShowToast }) => 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-[#1F2A37] mb-1">
-                    Step Number
+                  <label className="block text-xs font-semibold text-slate-300 mb-1">
+                    Phase Number
                   </label>
                   <input
                     type="text"
                     value={number}
                     onChange={(e) => setNumber(e.target.value)}
                     placeholder="01"
-                    className="w-full text-xs px-3 py-2 rounded-xl border border-gray-200 focus:border-[#4CC9A7] outline-none"
+                    className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-[#080B11] border border-slate-700 text-white focus:border-[#00E599] outline-none"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-[#1F2A37] mb-1">
-                    Ring Color
+                  <label className="block text-xs font-semibold text-slate-300 mb-1">
+                    Ring Accent
                   </label>
                   <select
                     value={ringColor}
                     onChange={(e) => setRingColor(e.target.value as 'teal' | 'coral')}
-                    className="w-full text-xs px-3 py-2 rounded-xl border border-gray-200 focus:border-[#4CC9A7] outline-none bg-white"
+                    className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-[#080B11] border border-slate-700 text-white focus:border-[#00E599] outline-none"
                   >
-                    <option value="teal">Teal (#4CC9A7)</option>
-                    <option value="coral">Coral (#F2685F)</option>
+                    <option value="teal">Emerald Glow (#00E599)</option>
+                    <option value="coral">Fiery Coral (#FF5A36)</option>
                   </select>
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#1F2A37] mb-1">
-                  Step Title
+                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                  Phase Title
                 </label>
                 <input
                   type="text"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  placeholder="e.g. Empathize, Wireframing"
-                  className="w-full text-xs px-3 py-2 rounded-xl border border-gray-200 focus:border-[#4CC9A7] outline-none"
+                  placeholder="e.g. Discovery &amp; Strategy"
+                  className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-[#080B11] border border-slate-700 text-white focus:border-[#00E599] outline-none"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#1F2A37] mb-1">
+                <label className="block text-xs font-semibold text-slate-300 mb-1">
                   Description
                 </label>
                 <textarea
                   rows={2}
                   value={desc}
                   onChange={(e) => setDesc(e.target.value)}
-                  placeholder="Short 1-2 sentence description of what happens in this stage."
-                  className="w-full text-xs px-3 py-2 rounded-xl border border-gray-200 focus:border-[#4CC9A7] outline-none resize-none"
+                  placeholder="Short description of what happens in this stage."
+                  className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-[#080B11] border border-slate-700 text-white focus:border-[#00E599] outline-none resize-none leading-relaxed"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#1F2A37] mb-1">
-                  Icon
+                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                  Icon Visual
                 </label>
                 <div className="grid grid-cols-3 gap-2">
                   {availableIcons.map((ic) => (
@@ -551,10 +558,10 @@ export const ProcessModule: React.FC<ProcessModuleProps> = ({ onShowToast }) => 
                       key={ic.name}
                       type="button"
                       onClick={() => setIcon(ic.name)}
-                      className={`flex flex-col items-center justify-center p-2 rounded-xl border text-center transition-all cursor-pointer ${
+                      className={`flex flex-col items-center justify-center p-2.5 rounded-xl border text-center transition-all cursor-pointer ${
                         icon === ic.name
-                          ? 'border-[#4CC9A7] bg-[#E8F7F2] text-[#4CC9A7] font-bold'
-                          : 'border-gray-200 text-gray-600 hover:border-gray-300'
+                          ? 'border-[#00E599] bg-[#00E599]/15 text-[#00E599] font-bold'
+                          : 'border-slate-800 bg-[#080B11] text-slate-400 hover:border-slate-700 hover:text-white'
                       }`}
                     >
                       <div className="mb-1">{renderIcon(ic.name, ringColor === 'coral')}</div>
@@ -564,19 +571,19 @@ export const ProcessModule: React.FC<ProcessModuleProps> = ({ onShowToast }) => 
                 </div>
               </div>
 
-              <div className="flex items-center justify-end gap-2 pt-3 border-t border-gray-100">
+              <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-800">
                 <button
                   type="button"
                   onClick={() => setModalOpen(false)}
-                  className="px-4 py-2 text-xs font-semibold text-[#6B7280] hover:text-[#1F2A37] rounded-xl cursor-pointer"
+                  className="px-4 py-2 text-xs font-semibold text-slate-400 hover:text-white rounded-xl cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="bg-[#4CC9A7] hover:bg-[#37B294] text-white text-xs font-semibold px-5 py-2 rounded-xl shadow-xs transition-colors cursor-pointer"
+                  className="bg-[#00E599] hover:bg-[#00B377] text-black text-xs font-bold px-5 py-2 rounded-xl shadow-md transition-colors cursor-pointer"
                 >
-                  {editingStep ? 'Update Step' : 'Add Step'}
+                  {editingStep ? 'Update Phase' : 'Add Phase'}
                 </button>
               </div>
             </form>

@@ -1,39 +1,35 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #4CC9A7;
-  --color-primary-dark: #37B294;
-  --color-primary-soft: #E8F7F2;
-  --color-primary-tint: #D8F2E9;
+  --color-primary: #00E599;
+  --color-primary-dark: #00B377;
+  --color-primary-soft: rgba(0, 229, 153, 0.12);
+  --color-primary-tint: rgba(0, 229, 153, 0.2);
 
-  --color-accent: #F2685F;
-  --color-accent-dark: #E0524A;
-  --color-accent-soft: #FDECEA;
+  --color-accent: #FF5A36;
+  --color-accent-dark: #E04220;
+  --color-accent-soft: rgba(255, 90, 54, 0.12);
 
-  --color-teal: #4CC9A7;
-  --color-teal-dark: #2D9A7A;
-  --color-teal-soft: #E8F7F2;
+  --color-cyan: #06B6D4;
+  --color-purple: #A855F7;
 
-  --color-ink: #1F2A37;
-  --color-ink-body: #4B5563;
-  --color-ink-muted: #9CA3AF;
+  --color-dark-bg: #080B11;
+  --color-dark-card: #0F1522;
+  --color-dark-card-hover: #141C2E;
+  --color-dark-border: rgba(255, 255, 255, 0.08);
 
-  --color-page: #FAF9F5;
-  --color-card-border: #E8F7F2;
-  --color-star: #F59E0B;
-
-  --font-sans: 'Plus Jakarta Sans', 'Poppins', sans-serif;
+  --font-sans: 'Poppins', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   --font-script: 'Caveat', cursive;
 
-  --shadow-soft-card: 0 10px 30px -5px rgba(76, 201, 167, 0.08), 0 4px 12px -2px rgba(0, 0, 0, 0.03);
-  --shadow-float-badge: 0 16px 32px -4px rgba(31, 42, 55, 0.08);
+  --shadow-neon-glow: 0 0 25px rgba(0, 229, 153, 0.25);
+  --shadow-coral-glow: 0 0 25px rgba(255, 90, 54, 0.25);
 }
 
 @layer base {
   body {
-    background-color: #FAF9F5;
-    color: #4B5552;
-    font-family: 'Plus Jakarta Sans', 'Poppins', sans-serif;
+    background-color: #080B11;
+    color: #94A3B8;
+    font-family: 'Poppins', 'Plus Jakarta Sans', system-ui, sans-serif;
   }
 }
 
@@ -63,7 +59,7 @@
     transform: translateY(0px);
   }
   50% {
-    transform: translateY(-6px);
+    transform: translateY(-8px);
   }
 }
 
@@ -75,17 +71,32 @@
   animation: floatSlow 5.2s ease-in-out infinite 2s;
 }
 
-/* Custom scrollbar */
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.04);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 4s ease-in-out infinite;
+}
+
+/* Custom dark scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #FAF9F5;
+  background: #080B11;
 }
 ::-webkit-scrollbar-thumb {
-  background: #D8D6CE;
+  background: #1E293B;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #B6B4AC;
+  background: #334155;
 }

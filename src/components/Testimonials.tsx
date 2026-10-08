@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { usePortfolio } from '../context/PortfolioContext';
 import { Testimonial } from '../types';
-import { Star, PlusCircle, Quote } from 'lucide-react';
+import { Star, PlusCircle, Quote, X } from 'lucide-react';
 
 interface TestimonialsProps {
   onShowToast: (title: string, msg: string) => void;
@@ -32,11 +32,10 @@ export const Testimonials: React.FC<TestimonialsProps> = ({ onShowToast }) => {
       .toUpperCase();
 
     const bgColors = [
-      'bg-emerald-100 text-teal-800',
-      'bg-pink-100 text-pink-700',
-      'bg-indigo-100 text-indigo-700',
-      'bg-amber-100 text-amber-800',
-      'bg-purple-100 text-purple-700',
+      'bg-[#00E599]/20 text-[#00E599] border border-[#00E599]/40',
+      'bg-[#FF5A36]/20 text-[#FF5A36] border border-[#FF5A36]/40',
+      'bg-[#06B6D4]/20 text-[#06B6D4] border border-[#06B6D4]/40',
+      'bg-[#A855F7]/20 text-[#A855F7] border border-[#A855F7]/40',
     ];
     const randomBg = bgColors[Math.floor(Math.random() * bgColors.length)];
 
@@ -58,35 +57,43 @@ export const Testimonials: React.FC<TestimonialsProps> = ({ onShowToast }) => {
     setFormRole('');
     setFormCompany('');
     setFormQuote('');
-    onShowToast('Endorsement Added', 'Thank you! Your testimonial is now live on the portfolio.');
+    onShowToast('Endorsement Added', 'Thank you! Your testimonial is now live.');
   };
 
   return (
-    <section id="testimonials" className="py-20 md:py-24 bg-white relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header: Two-tone with Caveat teal and tiny coral heart */}
-        <div className="text-center mb-14">
-          <h2 className="text-3xl sm:text-4xl font-bold text-[#1F2A37]">
-            What Clients <span className="font-script text-[#4CC9A7] text-4xl sm:text-5xl">Say</span>{' '}
-            <span className="text-[#F2685F] text-2xl select-none inline-block animate-pulse">♡</span>
+    <section id="testimonials" className="py-24 md:py-32 bg-[#080B11] relative overflow-hidden">
+      {/* Background glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#00E599]/5 rounded-full blur-[140px] pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        {/* Header */}
+        <div className="text-center mb-16">
+          <div className="flex items-center justify-center gap-4 text-xs font-bold uppercase tracking-[0.3em] text-[#00E599] mb-3">
+            <span className="w-12 h-px bg-gradient-to-r from-transparent to-[#00E599]" />
+            <span>CLIENT REPUTATION</span>
+            <span className="w-12 h-px bg-gradient-to-l from-transparent to-[#00E599]" />
+          </div>
+
+          <h2 className="text-4xl sm:text-5xl font-black text-white tracking-tight font-sans">
+            Trusted by Ambitious Brands
           </h2>
-          <p className="text-sm text-[#9CA3AF] mt-2">
-            Client feedback from founders, product managers, and design leads.
+          <p className="text-sm sm:text-base text-slate-400 mt-3 max-w-xl mx-auto leading-relaxed">
+            Real feedback from founders, marketing directors, and creative leads who built with NEXO.
           </p>
         </div>
 
-        {/* Testimonials Cards Grid / Empty State */}
+        {/* Testimonials Cards Grid */}
         {publishedTestimonials.length === 0 ? (
-          <div className="bg-[#F7FCFA] rounded-3xl p-10 text-center border-2 border-dashed border-[#D8F2E9] max-w-lg mx-auto">
-            <Quote className="w-10 h-10 text-[#4CC9A7]/40 mx-auto mb-3" />
-            <h3 className="text-base font-bold text-[#1F2A37] mb-1">No Testimonials Yet</h3>
-            <p className="text-xs text-[#6B7280] leading-relaxed mb-5">
-              Client reviews and endorsements will appear here. Be the first to leave feedback!
+          <div className="bg-[#0F1522] rounded-3xl p-10 text-center border-2 border-dashed border-slate-800 max-w-lg mx-auto">
+            <Quote className="w-10 h-10 text-[#00E599]/40 mx-auto mb-3" />
+            <h3 className="text-base font-bold text-white mb-1">No Endorsements Published Yet</h3>
+            <p className="text-xs text-slate-400 leading-relaxed mb-5">
+              Client reviews will appear here. Be the first to leave an endorsement!
             </p>
             <button
               type="button"
               onClick={() => setModalOpen(true)}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#4CC9A7] text-white text-xs font-bold hover:bg-[#37B294] transition-all shadow-sm cursor-pointer"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#00E599] text-black text-xs font-bold hover:bg-[#00B377] transition-all shadow-md cursor-pointer"
             >
               <PlusCircle className="w-4 h-4" />
               <span>Leave an Endorsement</span>
@@ -97,77 +104,59 @@ export const Testimonials: React.FC<TestimonialsProps> = ({ onShowToast }) => {
             {publishedTestimonials.map((item, idx) => (
               <div
                 key={item.id}
-                className={`bg-[#F7FCFA] border border-[#E8F7F2] rounded-3xl p-6 shadow-[0_10px_30px_-5px_rgba(76,201,167,0.08),0_4px_12px_-2px_rgba(0,0,0,0.04)] flex flex-col justify-between relative hover:shadow-md transition-shadow ${
-                  idx === activeDot ? 'ring-1 ring-[#4CC9A7]/40' : ''
+                className={`bg-[#0F1522] border border-slate-800 rounded-3xl p-7 shadow-xl flex flex-col justify-between relative hover:border-slate-700 transition-all ${
+                  idx === activeDot ? 'ring-1 ring-[#00E599]/40' : ''
                 }`}
               >
-              <Quote className="w-8 h-8 text-[#F2685F]/30 absolute top-5 left-5" />
+                <Quote className="w-8 h-8 text-[#00E599]/20 absolute top-6 left-6" />
 
-              <div className="pt-6 mb-6">
-                <p className="text-xs sm:text-sm text-[#6B7280] leading-relaxed italic">
-                  "{item.quote}"
-                </p>
-              </div>
-
-              <div className="flex items-center gap-3 border-t border-[#D8F2E9]/60 pt-4">
-                {item.avatarUrl ? (
-                  <img
-                    src={item.avatarUrl}
-                    alt={item.name}
-                    className="w-11 h-11 rounded-full object-cover flex-shrink-0 border border-[#4CC9A7]/30 shadow-xs"
-                    onError={(e) => {
-                      (e.currentTarget as HTMLImageElement).style.display = 'none';
-                    }}
-                  />
-                ) : (
-                  <div
-                    className={`w-11 h-11 rounded-full ${item.avatarBg} flex items-center justify-center font-bold text-sm flex-shrink-0`}
-                  >
-                    {item.initials}
-                  </div>
-                )}
-                <div>
-                  <h4 className="text-xs font-bold text-[#1F2A37]">{item.name}</h4>
-                  <p className="text-[11px] text-[#9CA3AF]">
-                    {item.role}, {item.company}
+                <div className="pt-6 mb-6">
+                  <p className="text-sm text-slate-300 leading-relaxed italic">
+                    &ldquo;{item.quote}&rdquo;
                   </p>
-                  {/* Rating Stars */}
-                  <div className="flex text-[#F5B301] text-xs mt-0.5">
-                    {Array.from({ length: item.rating }).map((_, i) => (
-                      <span key={i}>★</span>
-                    ))}
+                </div>
+
+                <div className="flex items-center gap-3 border-t border-slate-800 pt-4">
+                  {item.avatarUrl ? (
+                    <img
+                      src={item.avatarUrl}
+                      alt={item.name}
+                      className="w-11 h-11 rounded-full object-cover flex-shrink-0 border border-[#00E599]/40 shadow-xs"
+                      onError={(e) => {
+                        (e.currentTarget as HTMLImageElement).style.display = 'none';
+                      }}
+                    />
+                  ) : (
+                    <div
+                      className={`w-11 h-11 rounded-full ${item.avatarBg} flex items-center justify-center font-bold text-sm flex-shrink-0`}
+                    >
+                      {item.initials}
+                    </div>
+                  )}
+                  <div>
+                    <h4 className="text-xs font-bold text-white">{item.name}</h4>
+                    <p className="text-[11px] text-slate-400">
+                      {item.role}, {item.company}
+                    </p>
+                    {/* Rating Stars */}
+                    <div className="flex text-[#FFB800] text-xs mt-0.5">
+                      {Array.from({ length: item.rating }).map((_, i) => (
+                        <span key={i}>★</span>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
         )}
 
         {/* Carousel Pagination Dots & Add Testimonial Trigger */}
-        <div className="flex flex-col items-center gap-4 mt-8">
-          {publishedTestimonials.length > 0 && (
-            <div className="flex items-center gap-2">
-              {publishedTestimonials.map((_, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  onClick={() => setActiveDot(i)}
-                  className={`transition-all cursor-pointer ${
-                    activeDot === i
-                      ? 'w-6 h-2 rounded-full bg-[#4CC9A7]'
-                      : 'w-2 h-2 rounded-full bg-[#D8F2E9] hover:bg-[#4CC9A7]/50'
-                  }`}
-                  aria-label={`Go to slide ${i + 1}`}
-                />
-              ))}
-            </div>
-          )}
-
+        <div className="flex flex-col items-center gap-4 mt-10">
           <button
             type="button"
             onClick={() => setModalOpen(true)}
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#4CC9A7] hover:text-[#37B294] transition-colors cursor-pointer pt-2"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#00E599] hover:text-[#00B377] transition-colors cursor-pointer"
           >
             <PlusCircle className="w-4 h-4" />
             <span>Leave a Client Endorsement</span>
@@ -176,106 +165,95 @@ export const Testimonials: React.FC<TestimonialsProps> = ({ onShowToast }) => {
 
         {/* Endorsement Modal */}
         {modalOpen && (
-          <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
-            <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl relative border border-[#D8F2E9]">
+          <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs flex items-center justify-center p-4">
+            <div className="bg-[#0F1522] rounded-3xl max-w-md w-full p-6 shadow-2xl relative border border-slate-700 text-white animate-in fade-in zoom-in-95">
               <button
                 type="button"
                 onClick={() => setModalOpen(false)}
-                className="absolute top-5 right-5 text-gray-400 hover:text-gray-700 text-lg font-bold"
+                className="absolute top-4 right-4 p-1.5 rounded-full text-slate-400 hover:text-white hover:bg-slate-800"
               >
-                ✕
+                <X className="w-4 h-4" />
               </button>
 
-              <h3 className="text-xl font-bold text-[#1F2A37] mb-1">Add Endorsement</h3>
-              <p className="text-xs text-[#9CA3AF] mb-4">
-                Share your experience working with Ashhar on design projects.
+              <h3 className="text-lg font-bold text-white mb-1">Add an Endorsement</h3>
+              <p className="text-xs text-slate-400 mb-4">
+                Share your experience working with NEXO.
               </p>
 
-              <form onSubmit={handleSubmit} className="space-y-3">
+              <form onSubmit={handleSubmit} className="space-y-3 text-xs">
                 <div>
-                  <label className="block text-xs font-semibold text-[#1F2A37] mb-1">
-                    Your Full Name *
-                  </label>
+                  <label className="block font-semibold mb-1 text-slate-300">Your Full Name *</label>
                   <input
                     type="text"
                     required
                     value={formName}
                     onChange={(e) => setFormName(e.target.value)}
-                    placeholder="e.g. Maya Chen"
-                    className="w-full text-xs px-3 py-2 rounded-xl border border-gray-200 focus:border-[#4CC9A7] outline-none"
+                    placeholder="e.g. Alex Vance"
+                    className="w-full px-3 py-2 rounded-xl bg-[#080B11] border border-slate-700 text-white outline-none focus:border-[#00E599]"
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-semibold text-[#1F2A37] mb-1">Role</label>
+                    <label className="block font-semibold mb-1 text-slate-300">Role / Title</label>
                     <input
                       type="text"
                       value={formRole}
                       onChange={(e) => setFormRole(e.target.value)}
-                      placeholder="e.g. Product Lead"
-                      className="w-full text-xs px-3 py-2 rounded-xl border border-gray-200 focus:border-[#4CC9A7] outline-none"
+                      placeholder="e.g. Founder"
+                      className="w-full px-3 py-2 rounded-xl bg-[#080B11] border border-slate-700 text-white outline-none focus:border-[#00E599]"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-[#1F2A37] mb-1">
-                      Company
-                    </label>
+                    <label className="block font-semibold mb-1 text-slate-300">Company Name</label>
                     <input
                       type="text"
                       value={formCompany}
                       onChange={(e) => setFormCompany(e.target.value)}
-                      placeholder="e.g. FinTech Labs"
-                      className="w-full text-xs px-3 py-2 rounded-xl border border-gray-200 focus:border-[#4CC9A7] outline-none"
+                      placeholder="e.g. Apex Labs"
+                      className="w-full px-3 py-2 rounded-xl bg-[#080B11] border border-slate-700 text-white outline-none focus:border-[#00E599]"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-[#1F2A37] mb-1">
-                    Rating (Stars)
-                  </label>
-                  <div className="flex gap-1 text-lg text-[#F5B301]">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <button
-                        key={star}
-                        type="button"
-                        onClick={() => setFormRating(star)}
-                        className="cursor-pointer hover:scale-125 transition-transform"
-                      >
-                        {star <= formRating ? '★' : '☆'}
-                      </button>
-                    ))}
-                  </div>
+                  <label className="block font-semibold mb-1 text-slate-300">Rating</label>
+                  <select
+                    value={formRating}
+                    onChange={(e) => setFormRating(Number(e.target.value))}
+                    className="w-full px-3 py-2 rounded-xl bg-[#080B11] border border-slate-700 text-white outline-none focus:border-[#00E599]"
+                  >
+                    <option value={5}>★★★★★ (5/5 Stars)</option>
+                    <option value={4}>★★★★☆ (4/5 Stars)</option>
+                    <option value={3}>★★★☆☆ (3/5 Stars)</option>
+                  </select>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-[#1F2A37] mb-1">
-                    Feedback / Quote *
-                  </label>
+                  <label className="block font-semibold mb-1 text-slate-300">Your Endorsement *</label>
                   <textarea
-                    required
                     rows={3}
+                    required
                     value={formQuote}
                     onChange={(e) => setFormQuote(e.target.value)}
-                    placeholder="He delivered an exceptional user experience with great attention to detail..."
-                    className="w-full text-xs px-3 py-2 rounded-xl border border-gray-200 focus:border-[#4CC9A7] outline-none"
+                    placeholder="Describe how NEXO helped your project..."
+                    className="w-full px-3 py-2 rounded-xl bg-[#080B11] border border-slate-700 text-white outline-none focus:border-[#00E599] resize-none"
                   />
                 </div>
 
-                <div className="pt-2 flex justify-end gap-2">
+                <div className="flex items-center justify-end gap-2 pt-2">
                   <button
                     type="button"
                     onClick={() => setModalOpen(false)}
-                    className="px-4 py-2 rounded-full border border-gray-200 text-xs font-semibold text-[#1F2A37] hover:bg-gray-50"
+                    className="px-4 py-2 rounded-full border border-slate-700 text-slate-300 hover:bg-slate-800"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-5 py-2 rounded-full bg-[#4CC9A7] hover:bg-[#37B294] text-white text-xs font-semibold transition-all shadow-sm"
+                    className="px-5 py-2 rounded-full bg-[#00E599] text-black font-bold hover:bg-[#00B377] shadow-sm cursor-pointer"
                   >
-                    Post Testimonial
+                    Publish Review
                   </button>
                 </div>
               </form>

@@ -102,17 +102,17 @@ export const WebsiteImagesManager: React.FC<WebsiteImagesManagerProps> = ({
     }
 
     setIsProcessing(false);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
-  };
-
-  const handleUpdateItem = (id: string, updates: Partial<WebsiteImage>) => {
-    onChange(images.map((img) => (img.id === id ? { ...img, ...updates } : img)));
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   const handleDeleteItem = (id: string) => {
-    onChange(images.filter((img) => img.id !== id));
+    const updated = images.filter((img) => img.id !== id);
+    onChange(updated);
+  };
+
+  const handleUpdateItem = (id: string, partial: Partial<WebsiteImage>) => {
+    const updated = images.map((img) => (img.id === id ? { ...img, ...partial } : img));
+    onChange(updated);
   };
 
   const handleMove = (index: number, direction: 'up' | 'down') => {
@@ -146,27 +146,27 @@ export const WebsiteImagesManager: React.FC<WebsiteImagesManagerProps> = ({
   };
 
   const deviceIcons = {
-    desktop: <Monitor className="w-3.5 h-3.5" />,
-    mobile: <Smartphone className="w-3.5 h-3.5" />,
-    tablet: <Tablet className="w-3.5 h-3.5" />,
-    full: <FileText className="w-3.5 h-3.5" />,
+    desktop: <Monitor className="w-3.5 h-3.5 text-[#00E599]" />,
+    mobile: <Smartphone className="w-3.5 h-3.5 text-[#06B6D4]" />,
+    tablet: <Tablet className="w-3.5 h-3.5 text-[#FFB800]" />,
+    full: <FileText className="w-3.5 h-3.5 text-[#A855F7]" />,
   };
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-3 text-white">
       {/* Top Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-[#F7FCFA] p-3.5 rounded-2xl border border-[#D8F2E9]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-[#0D121D] p-3.5 rounded-2xl border border-slate-800">
         <div>
           <div className="flex items-center gap-2">
-            <Layers className="w-4 h-4 text-[#4CC9A7]" />
-            <h4 className="text-xs font-bold text-[#1F2A37]">
-              Different Images of the Website ({images.length})
+            <Layers className="w-4 h-4 text-[#00E599]" />
+            <h4 className="text-xs font-bold text-white font-sans">
+              Website Screens &amp; Multi-Device Views ({images.length})
             </h4>
-            <span className="bg-[#E8F7F2] text-[#37B294] text-[10px] font-bold px-2 py-0.5 rounded-full">
+            <span className="bg-[#00E599]/15 text-[#00E599] border border-[#00E599]/30 text-[10px] font-bold font-mono px-2 py-0.5 rounded-full">
               Screens &amp; Mockups
             </span>
           </div>
-          <p className="text-[11px] text-[#6B7280] mt-0.5">
+          <p className="text-[11px] text-slate-400 mt-0.5">
             Upload multiple pages and responsive screens (Homepage, Features, Dashboard, Mobile View, etc.).
           </p>
         </div>
@@ -186,7 +186,7 @@ export const WebsiteImagesManager: React.FC<WebsiteImagesManagerProps> = ({
             type="button"
             onClick={() => fileInputRef.current?.click()}
             disabled={isProcessing}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#4CC9A7] hover:bg-[#37B294] text-white text-xs font-semibold shadow-xs transition-all cursor-pointer active:scale-95"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#00E599] hover:bg-[#00B377] text-black text-xs font-bold shadow-md transition-all cursor-pointer active:scale-95"
           >
             <Upload className={`w-3.5 h-3.5 ${isProcessing ? 'animate-bounce' : ''}`} />
             <span>{isProcessing ? 'Uploading...' : 'Upload Website Images'}</span>
@@ -202,18 +202,18 @@ export const WebsiteImagesManager: React.FC<WebsiteImagesManagerProps> = ({
         onClick={() => fileInputRef.current?.click()}
         className={`border-2 border-dashed rounded-2xl p-4 text-center cursor-pointer transition-all flex items-center justify-center gap-3 ${
           isDragging
-            ? 'border-[#4CC9A7] bg-[#E8F7F2]/60 scale-[1.01]'
-            : 'border-gray-200 bg-white hover:border-[#4CC9A7] hover:bg-[#F9FBFA]'
+            ? 'border-[#00E599] bg-[#00E599]/10 scale-[1.01]'
+            : 'border-slate-700 bg-[#080B11] hover:border-[#00E599] hover:bg-[#0D121D]'
         }`}
       >
-        <div className="w-9 h-9 rounded-xl bg-[#E8F7F2] text-[#37B294] flex items-center justify-center">
+        <div className="w-9 h-9 rounded-xl bg-[#00E599]/15 text-[#00E599] flex items-center justify-center border border-[#00E599]/30">
           <Plus className="w-5 h-5" />
         </div>
         <div className="text-left">
-          <p className="text-xs font-semibold text-[#1F2A37]">
+          <p className="text-xs font-bold text-white">
             Click or drag &amp; drop to add different images of the website
           </p>
-          <p className="text-[11px] text-[#9CA3AF]">
+          <p className="text-[11px] text-slate-400">
             Select single or multiple screenshots (PNG, JPG, WebP)
           </p>
         </div>
@@ -228,27 +228,27 @@ export const WebsiteImagesManager: React.FC<WebsiteImagesManagerProps> = ({
             return (
               <div
                 key={item.id}
-                className={`bg-white rounded-2xl p-3 border transition-all shadow-xs flex flex-col sm:flex-row items-start sm:items-center gap-3 ${
-                  isCover ? 'border-[#4CC9A7] ring-2 ring-[#4CC9A7]/20 bg-[#F7FCFA]' : 'border-gray-200 hover:border-gray-300'
+                className={`bg-[#0F1522] rounded-2xl p-3 border transition-all shadow-md flex flex-col sm:flex-row items-start sm:items-center gap-3 ${
+                  isCover ? 'border-[#00E599] ring-1 ring-[#00E599]/30 bg-[#0F1A28]' : 'border-slate-800 hover:border-slate-700'
                 }`}
               >
                 {/* Reorder Up/Down */}
-                <div className="hidden sm:flex flex-col items-center gap-1 text-gray-400">
+                <div className="hidden sm:flex flex-col items-center gap-1 text-slate-400">
                   <button
                     type="button"
                     onClick={() => handleMove(index, 'up')}
                     disabled={index === 0}
-                    className="p-1 hover:text-[#4CC9A7] disabled:opacity-20 cursor-pointer disabled:cursor-not-allowed"
+                    className="p-1 hover:text-[#00E599] disabled:opacity-20 cursor-pointer disabled:cursor-not-allowed"
                     title="Move Up"
                   >
                     <ChevronUp className="w-3.5 h-3.5" />
                   </button>
-                  <span className="text-[10px] font-bold text-gray-500">{index + 1}</span>
+                  <span className="text-[10px] font-mono font-bold text-slate-400">{index + 1}</span>
                   <button
                     type="button"
                     onClick={() => handleMove(index, 'down')}
                     disabled={index === images.length - 1}
-                    className="p-1 hover:text-[#4CC9A7] disabled:opacity-20 cursor-pointer disabled:cursor-not-allowed"
+                    className="p-1 hover:text-[#00E599] disabled:opacity-20 cursor-pointer disabled:cursor-not-allowed"
                     title="Move Down"
                   >
                     <ChevronDown className="w-3.5 h-3.5" />
@@ -258,15 +258,15 @@ export const WebsiteImagesManager: React.FC<WebsiteImagesManagerProps> = ({
                 {/* Thumbnail Preview */}
                 <div
                   onClick={() => setPreviewModalUrl(item.url)}
-                  className="w-24 h-16 rounded-xl overflow-hidden bg-gray-100 border border-gray-200 flex-shrink-0 relative group cursor-pointer"
+                  className="w-24 h-16 rounded-xl overflow-hidden bg-[#080B11] border border-slate-700 flex-shrink-0 relative group cursor-pointer"
                   title="Click to view full preview"
                 >
                   <img src={item.url} alt={item.title} className="w-full h-full object-cover" />
-                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white">
-                    <Eye className="w-4 h-4" />
+                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white">
+                    <Eye className="w-4 h-4 text-[#00E599]" />
                   </div>
                   {isCover && (
-                    <div className="absolute top-1 left-1 bg-[#4CC9A7] text-white text-[9px] font-bold px-1.5 py-0.5 rounded-md flex items-center gap-0.5 shadow-xs">
+                    <div className="absolute top-1 left-1 bg-[#00E599] text-black text-[9px] font-bold px-1.5 py-0.5 rounded-md flex items-center gap-0.5 shadow-sm">
                       <Star className="w-2.5 h-2.5 fill-current" />
                       <span>Cover</span>
                     </div>
@@ -278,21 +278,21 @@ export const WebsiteImagesManager: React.FC<WebsiteImagesManagerProps> = ({
                   <div className="grid grid-cols-1 sm:grid-cols-12 gap-2">
                     {/* Screen Title */}
                     <div className="sm:col-span-8">
-                      <label className="block text-[10px] font-semibold text-gray-500 mb-0.5">
-                        Screen Name / Website Section
+                      <label className="block text-[10px] font-semibold text-slate-400 mb-0.5">
+                        Screen Name / Section
                       </label>
                       <input
                         type="text"
                         value={item.title}
                         onChange={(e) => handleUpdateItem(item.id, { title: e.target.value })}
                         placeholder="e.g. Homepage Hero, Pricing Table, Dashboard"
-                        className="w-full text-xs px-2.5 py-1.5 rounded-lg border border-gray-200 outline-none focus:border-[#4CC9A7]"
+                        className="w-full text-xs px-2.5 py-1.5 rounded-lg border border-slate-700 bg-[#080B11] text-white outline-none focus:border-[#00E599]"
                       />
                     </div>
 
                     {/* Device Selector */}
                     <div className="sm:col-span-4">
-                      <label className="block text-[10px] font-semibold text-gray-500 mb-0.5">
+                      <label className="block text-[10px] font-semibold text-slate-400 mb-0.5">
                         Device Type
                       </label>
                       <div className="relative">
@@ -303,14 +303,14 @@ export const WebsiteImagesManager: React.FC<WebsiteImagesManagerProps> = ({
                               deviceType: e.target.value as WebsiteImage['deviceType'],
                             })
                           }
-                          className="w-full text-xs pl-7 pr-2 py-1.5 rounded-lg border border-gray-200 outline-none bg-white focus:border-[#4CC9A7]"
+                          className="w-full text-xs pl-7 pr-2 py-1.5 rounded-lg border border-slate-700 bg-[#080B11] text-white outline-none focus:border-[#00E599]"
                         >
                           <option value="desktop">💻 Desktop</option>
                           <option value="mobile">📱 Mobile View</option>
                           <option value="tablet">📲 Tablet View</option>
                           <option value="full">📄 Full Page</option>
                         </select>
-                        <div className="absolute left-2 top-2 pointer-events-none text-gray-400">
+                        <div className="absolute left-2 top-2 pointer-events-none">
                           {deviceIcons[item.deviceType || 'desktop']}
                         </div>
                       </div>
@@ -324,7 +324,7 @@ export const WebsiteImagesManager: React.FC<WebsiteImagesManagerProps> = ({
                       value={item.caption || ''}
                       onChange={(e) => handleUpdateItem(item.id, { caption: e.target.value })}
                       placeholder="Optional caption or note (e.g. 'Checkout funnel with 1-click Apple Pay')"
-                      className="w-full text-[11px] px-2.5 py-1 rounded-lg border border-gray-100 text-gray-600 outline-none focus:border-[#4CC9A7]"
+                      className="w-full text-[11px] px-2.5 py-1 rounded-lg border border-slate-800 bg-[#080B11] text-slate-300 outline-none focus:border-[#00E599]"
                     />
                   </div>
                 </div>
@@ -337,12 +337,12 @@ export const WebsiteImagesManager: React.FC<WebsiteImagesManagerProps> = ({
                       onClick={() => onSetAsCover(item.url)}
                       className={`text-[10px] font-semibold px-2.5 py-1 rounded-lg transition-colors cursor-pointer flex items-center gap-1 whitespace-nowrap ${
                         isCover
-                          ? 'bg-[#E8F7F2] text-[#37B294] font-bold'
-                          : 'text-gray-500 hover:text-[#4CC9A7] hover:bg-gray-100'
+                          ? 'bg-[#00E599]/20 text-[#00E599] border border-[#00E599]/40 font-bold'
+                          : 'text-slate-400 hover:text-white hover:bg-slate-800'
                       }`}
                       title={isCover ? 'Currently set as primary cover' : 'Set as project cover image'}
                     >
-                      <Star className={`w-3 h-3 ${isCover ? 'fill-[#37B294] text-[#37B294]' : ''}`} />
+                      <Star className={`w-3 h-3 ${isCover ? 'fill-[#00E599] text-[#00E599]' : ''}`} />
                       <span>{isCover ? 'Primary Cover' : 'Set as Cover'}</span>
                     </button>
                   )}
@@ -350,7 +350,7 @@ export const WebsiteImagesManager: React.FC<WebsiteImagesManagerProps> = ({
                   <button
                     type="button"
                     onClick={() => handleDeleteItem(item.id)}
-                    className="p-1.5 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors cursor-pointer"
+                    className="p-1.5 rounded-lg text-slate-400 hover:text-red-400 hover:bg-red-950/40 transition-colors cursor-pointer"
                     title="Remove this website image"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -361,7 +361,7 @@ export const WebsiteImagesManager: React.FC<WebsiteImagesManagerProps> = ({
           })}
         </div>
       ) : (
-        <div className="p-4 rounded-xl bg-gray-50 border border-dashed border-gray-200 text-center text-xs text-gray-500">
+        <div className="p-4 rounded-xl bg-[#080B11] border border-dashed border-slate-800 text-center text-xs text-slate-500">
           No website images added yet. Click &quot;Upload Website Images&quot; above to add desktop, mobile, and feature screenshots!
         </div>
       )}
@@ -370,18 +370,18 @@ export const WebsiteImagesManager: React.FC<WebsiteImagesManagerProps> = ({
       {previewModalUrl && (
         <div
           onClick={() => setPreviewModalUrl(null)}
-          className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs flex items-center justify-center p-4 cursor-pointer"
+          className="fixed inset-0 z-50 bg-black/85 backdrop-blur-xs flex items-center justify-center p-4 cursor-pointer"
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="relative max-w-4xl max-h-[90vh] bg-white rounded-3xl p-3 shadow-2xl overflow-hidden flex flex-col"
+            className="relative max-w-4xl max-h-[90vh] bg-[#0F1522] rounded-3xl p-4 shadow-2xl border border-slate-700 overflow-hidden flex flex-col"
           >
-            <div className="flex items-center justify-between pb-2 border-b border-gray-100">
-              <span className="text-xs font-bold text-gray-700">Website Screen Preview</span>
+            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+              <span className="text-xs font-bold text-white">Website Screen Preview</span>
               <button
                 type="button"
                 onClick={() => setPreviewModalUrl(null)}
-                className="p-1 rounded-full text-gray-400 hover:text-gray-600 cursor-pointer"
+                className="p-1 rounded-full text-slate-400 hover:text-white cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>

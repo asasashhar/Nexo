@@ -8,13 +8,11 @@ import {
   Clock,
   ExternalLink,
   Layers,
-  Monitor,
   Play,
   Send,
-  Smartphone,
   Sparkles,
   ArrowRight,
-  Filter,
+  Film,
 } from 'lucide-react';
 
 interface ServiceWorksPageProps {
@@ -37,11 +35,11 @@ export const ServiceWorksPage: React.FC<ServiceWorksPageProps> = ({
 
   if (!currentService) {
     return (
-      <div className="min-h-[60vh] flex flex-col items-center justify-center p-8 text-center">
-        <p className="text-gray-500 mb-4">Service not found.</p>
+      <div className="min-h-[60vh] flex flex-col items-center justify-center p-8 text-center bg-[#080B11] text-white">
+        <p className="text-slate-400 mb-4">Service not found.</p>
         <button
           onClick={onBack}
-          className="px-6 py-2.5 bg-[#4CC9A7] text-white rounded-full text-xs font-bold cursor-pointer"
+          className="px-6 py-2.5 bg-[#00E599] text-black rounded-full text-xs font-bold cursor-pointer"
         >
           Return to Overview
         </button>
@@ -59,249 +57,176 @@ export const ServiceWorksPage: React.FC<ServiceWorksPageProps> = ({
     return matchesServiceId || matchesCategory;
   });
 
-  const filteredProjects = selectedFilter === 'all'
-    ? serviceProjects
-    : serviceProjects.filter((p) => p.workType === selectedFilter);
+  const filteredProjects = serviceProjects.filter((p) => {
+    if (selectedFilter === 'all') return true;
+    return p.workType === selectedFilter;
+  });
 
   return (
-    <div className="min-h-screen bg-[#FAF9F5] py-12 md:py-16 animate-in fade-in duration-300">
+    <div className="min-h-screen bg-[#080B11] text-slate-300 py-12 md:py-16 animate-in fade-in duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Navigation Bar / Breadcrumb */}
-        <div className="flex items-center justify-between mb-8 pb-4 border-b border-[#E8E6DF]">
+        <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-800">
           <button
             onClick={onBack}
             type="button"
-            className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-[#4B5552] hover:text-[#4CC9A7] transition-colors cursor-pointer group"
+            className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-slate-400 hover:text-[#00E599] transition-colors cursor-pointer group"
           >
             <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
             <span>Back to All Capabilities</span>
           </button>
 
-          <span className="text-[11px] font-semibold text-[#8C9793] uppercase tracking-wider bg-white px-3 py-1 rounded-full border border-[#E8E6DF] shadow-2xs">
-            Service Deep Dive
+          <span className="text-[11px] font-mono font-bold text-[#00E599] uppercase tracking-wider bg-[#0F1522] px-3.5 py-1.5 rounded-full border border-slate-800">
+            NEXO Practice Area
           </span>
         </div>
 
         {/* Hero Header for this Service */}
-        <div className="bg-white rounded-3xl p-6 sm:p-10 border border-[#E8E6DF] shadow-soft-card mb-12 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-br from-[#E8F7F2] to-transparent rounded-full blur-3xl -z-10 pointer-events-none" />
+        <div className="bg-[#0F1522] rounded-3xl p-6 sm:p-10 border border-slate-800 shadow-2xl mb-12 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-80 h-80 bg-[#00E599]/10 rounded-full blur-3xl -z-10 pointer-events-none" />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             <div className="lg:col-span-8 space-y-4">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#E8F7F2] text-[#2D9A7A] text-xs font-bold uppercase tracking-wider">
-                <Sparkles className="w-3.5 h-3.5 text-[#F2685F]" />
-                <span>Specialized Practice</span>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#00E599]/15 text-[#00E599] text-xs font-bold uppercase tracking-wider border border-[#00E599]/30">
+                <Sparkles className="w-3.5 h-3.5 text-[#FF5A36]" />
+                <span>Specialized Studio Service</span>
               </div>
 
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-[#111615] tracking-tight">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight font-sans">
                 {currentService.title}
               </h1>
 
-              <p className="text-base sm:text-lg text-[#4B5552] max-w-2xl leading-relaxed">
+              <p className="text-base sm:text-lg text-slate-300 max-w-2xl leading-relaxed">
                 {currentService.desc}
               </p>
 
               {currentService.details && (
                 <div className="pt-2">
-                  <h2 className="text-xs font-bold text-[#8C9793] uppercase tracking-wider mb-2">
+                  <h2 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 font-mono">
                     Methodology &amp; Practice
                   </h2>
-                  <p className="text-sm text-[#4B5552] leading-relaxed">
+                  <p className="text-sm text-slate-300 leading-relaxed">
                     {currentService.details}
                   </p>
                 </div>
               )}
 
               {/* Delivery Meta */}
-              <div className="flex flex-wrap items-center gap-4 pt-3 text-xs text-[#111615]">
+              <div className="flex flex-wrap items-center gap-4 pt-3 text-xs text-white">
                 {currentService.estimatedTimeline && (
-                  <div className="flex items-center gap-1.5 bg-[#FAF9F5] px-3.5 py-1.5 rounded-full border border-[#E8E6DF]">
-                    <Clock className="w-3.5 h-3.5 text-[#4CC9A7]" />
+                  <div className="flex items-center gap-1.5 bg-[#080B11] px-3.5 py-1.5 rounded-full border border-slate-800">
+                    <Clock className="w-3.5 h-3.5 text-[#00E599]" />
                     <span className="font-semibold">Sprint Timeline:</span>
-                    <span className="text-[#4B5552]">{currentService.estimatedTimeline}</span>
+                    <span className="text-slate-400">{currentService.estimatedTimeline}</span>
                   </div>
                 )}
-                <div className="flex items-center gap-1.5 bg-[#FAF9F5] px-3.5 py-1.5 rounded-full border border-[#E8E6DF]">
-                  <Briefcase className="w-3.5 h-3.5 text-[#3FB98B]" />
-                  <span className="font-semibold">Available Capacity:</span>
-                  <span className="text-[#3FB98B] font-bold">Open for Sprints</span>
+                <div className="flex items-center gap-1.5 bg-[#080B11] px-3.5 py-1.5 rounded-full border border-slate-800">
+                  <Briefcase className="w-3.5 h-3.5 text-[#00E599]" />
+                  <span className="font-semibold">Status:</span>
+                  <span className="text-[#00E599] font-bold">Open for New Sprints</span>
                 </div>
               </div>
             </div>
 
             {/* Right Card: Deliverables & CTA */}
-            <div className="lg:col-span-4 bg-[#FAF9F5] rounded-2xl p-6 border border-[#E8E6DF] space-y-5">
-              <h2 className="text-xs font-bold text-[#111615] uppercase tracking-wider flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-[#3FB98B]" />
-                <span>Standard Deliverables</span>
+            <div className="lg:col-span-4 bg-[#080B11] rounded-2xl p-6 border border-slate-800 space-y-5">
+              <h2 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-[#00E599]" />
+                <span>Deliverables Package</span>
               </h2>
 
-              <div className="space-y-2.5">
-                {(currentService.deliverablesList && currentService.deliverablesList.length > 0
-                  ? currentService.deliverablesList
-                  : [
-                      'High-Fidelity Figma Systems',
-                      'Tactile Clickable Prototype',
-                      'Design Token Code Package',
-                      'Multi-Screen Responsive Assets',
-                    ]
-                ).map((deliv, idx) => (
-                  <div key={idx} className="flex items-start gap-2.5 text-xs text-[#4B5552]">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#4CC9A7] mt-1.5 flex-shrink-0" />
-                    <span>{deliv}</span>
-                  </div>
+              <ul className="space-y-2.5 text-xs text-slate-300">
+                {(currentService.deliverablesList || [
+                  'Production-Ready Source Files',
+                  'Cross-Platform Optimization',
+                  'Sprint Revisions & Polish',
+                  'Developer & Commercial Handoff',
+                ]).map((item, idx) => (
+                  <li key={idx} className="flex items-start gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#00E599] mt-1.5 flex-shrink-0" />
+                    <span>{item}</span>
+                  </li>
                 ))}
-              </div>
+              </ul>
 
-              <div className="pt-3 border-t border-[#E8E6DF]">
-                <button
-                  type="button"
-                  onClick={() => onStartProjectWithService(currentService.title)}
-                  className="w-full bg-[#F2685F] hover:bg-[#E0524A] text-white text-xs font-bold px-5 py-3 rounded-full shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer group"
-                >
-                  <span>Request Proposal for {currentService.title}</span>
-                  <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={() => onStartProjectWithService(currentService.title)}
+                className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-gradient-to-r from-[#00E599] to-[#00B377] text-black font-extrabold text-xs tracking-wider uppercase transition-all shadow-[0_0_20px_rgba(0,229,153,0.35)] cursor-pointer"
+              >
+                <span>Request Project for {currentService.title}</span>
+                <Send className="w-3.5 h-3.5" />
+              </button>
             </div>
           </div>
         </div>
 
-        {/* Showcase of Works Filter Bar */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
-          <div>
-            <h2 className="text-xl sm:text-2xl font-bold text-[#111615] flex items-center gap-2">
-              <span>Delivered Case Studies</span>
-              <span className="text-xs font-semibold text-[#2D9A7A] bg-[#E8F7F2] px-2.5 py-0.5 rounded-full">
-                {serviceProjects.length} Projects
-              </span>
+        {/* Filter & Projects List */}
+        <div>
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-2xl font-black text-white font-sans">
+              Selected {currentService.title} Case Studies
             </h2>
-            <p className="text-xs text-[#8C9793] mt-0.5">
-              Real client deployments and high-impact digital systems built under {currentService.title}.
-            </p>
+            <span className="text-xs font-mono text-slate-400">
+              {filteredProjects.length} Project{filteredProjects.length !== 1 ? 's' : ''}
+            </span>
           </div>
 
-          {/* WorkType Filter Chips */}
-          <div className="flex flex-wrap items-center gap-2">
-            {[
-              { id: 'all', label: 'All Formats' },
-              { id: 'web', label: 'Web & SaaS' },
-              { id: 'mobile', label: 'Mobile Apps' },
-              { id: 'ad', label: 'Performance Ads' },
-            ].map((f) => (
-              <button
-                key={f.id}
-                type="button"
-                onClick={() => setSelectedFilter(f.id as any)}
-                className={`text-xs px-3.5 py-1.5 rounded-full font-bold transition-all cursor-pointer ${
-                  selectedFilter === f.id
-                    ? 'bg-[#111615] text-white shadow-2xs'
-                    : 'bg-white text-[#4B5552] border border-[#E8E6DF] hover:border-gray-400'
-                }`}
-              >
-                {f.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Projects Grid */}
-        {filteredProjects.length === 0 ? (
-          <div className="bg-white rounded-3xl p-12 text-center border border-[#E8E6DF] space-y-4">
-            <Layers className="w-12 h-12 text-[#8C9793] mx-auto opacity-50" />
-            <h3 className="text-base font-bold text-[#111615]">
-              No case studies matching &quot;{selectedFilter}&quot; currently.
-            </h3>
-            <p className="text-xs text-[#8C9793] max-w-md mx-auto">
-              We frequently take on private under-NDA engagements for {currentService.title}.
-              Reach out directly to request our private deck.
-            </p>
-            <button
-              type="button"
-              onClick={() => onStartProjectWithService(currentService.title)}
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#4CC9A7] text-white text-xs font-bold rounded-full cursor-pointer hover:bg-[#37B294]"
-            >
-              <span>Inquire About {currentService.title}</span>
-              <Send className="w-3.5 h-3.5" />
-            </button>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredProjects.map((project) => (
-              <article
-                key={project.id}
-                onClick={() => onSelectProject(project)}
-                className="bg-white rounded-3xl overflow-hidden border border-[#E8E6DF] shadow-soft-card hover:shadow-xl transition-all duration-300 flex flex-col justify-between group cursor-pointer hover:-translate-y-1"
-              >
-                {/* Visual Cover Stage */}
-                <div className="h-52 relative overflow-hidden bg-[#FAF9F5]">
-                  {project.coverImage ? (
-                    <img
-                      src={project.coverImage}
-                      alt={project.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-[#E8F7F2] text-[#2D9A7A] font-bold text-sm">
-                      {project.title}
-                    </div>
-                  )}
-
-                  {/* Badges Overlay */}
-                  <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
-                    <span className="bg-white/95 backdrop-blur-xs text-[#111615] text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-2xs">
-                      {project.category}
-                    </span>
-
-                    {project.workType === 'ad' && project.adMediaType === 'video' && (
-                      <span className="bg-[#F2685F] text-white text-[10px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1 shadow-2xs">
-                        <Play className="w-3 h-3 fill-current" />
-                        <span>VIDEO</span>
-                      </span>
+          {filteredProjects.length === 0 ? (
+            <div className="bg-[#0F1522] rounded-3xl p-12 text-center border border-slate-800">
+              <p className="text-sm font-semibold text-white">No published projects in this specific service yet.</p>
+              <p className="text-xs text-slate-400 mt-1">
+                You can add case studies to this practice in your Admin CMS.
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {filteredProjects.map((project) => (
+                <div
+                  key={project.id}
+                  onClick={() => onSelectProject(project)}
+                  className="bg-[#0F1522] rounded-3xl overflow-hidden border border-slate-800 hover:border-[#00E599]/50 shadow-xl transition-all duration-300 flex flex-col group hover:-translate-y-1.5 cursor-pointer"
+                >
+                  <div className="h-56 relative overflow-hidden bg-black">
+                    {project.coverImage ? (
+                      <img
+                        src={project.coverImage}
+                        alt={project.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-slate-500 font-bold">
+                        {project.title}
+                      </div>
                     )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0F1522] via-transparent to-transparent pointer-events-none" />
                   </div>
 
-                  {project.websiteImages && project.websiteImages.length > 1 && (
-                    <div className="absolute bottom-3 right-3 bg-black/75 backdrop-blur-xs text-white text-[10px] font-semibold px-2 py-0.5 rounded-full flex items-center gap-1">
-                      <Layers className="w-3 h-3" />
-                      <span>{project.websiteImages.length} screens</span>
+                  <div className="p-6 flex-1 flex flex-col justify-between">
+                    <div>
+                      <span className="text-[11px] font-mono text-[#00E599] font-bold block mb-1">
+                        {project.category}
+                      </span>
+                      <h3 className="text-lg font-bold text-white mb-2 group-hover:text-[#00E599] transition-colors">
+                        {project.title}
+                      </h3>
+                      {project.summary && (
+                        <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed">
+                          {project.summary}
+                        </p>
+                      )}
                     </div>
-                  )}
-                </div>
 
-                {/* Content Details */}
-                <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
-                  <div>
-                    <div className="flex items-center justify-between text-[11px] text-[#8C9793] mb-1.5 font-medium">
-                      <span>{project.client || 'Client Project'}</span>
-                      <span>{project.year || '2024'}</span>
-                    </div>
-
-                    <h3 className="text-base font-bold text-[#111615] group-hover:text-[#4CC9A7] transition-colors">
-                      {project.title}
-                    </h3>
-
-                    <p className="text-xs text-[#4B5552] line-clamp-2 mt-2 leading-relaxed">
-                      {project.summary || project.overview}
-                    </p>
-                  </div>
-
-                  <div className="pt-3 border-t border-[#E8E6DF] flex items-center justify-between text-xs">
-                    <span className="font-bold text-[#4CC9A7] group-hover:underline inline-flex items-center gap-1">
+                    <div className="pt-4 border-t border-slate-800 flex items-center justify-between text-xs font-bold text-[#FF5A36] mt-4">
                       <span>Explore Case Study</span>
-                      <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
-                    </span>
-                    {project.tools && project.tools.length > 0 && (
-                      <span className="text-[11px] text-[#8C9793] truncate max-w-[120px]">
-                        {project.tools[0]}
-                      </span>
-                    )}
+                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </div>
                   </div>
                 </div>
-              </article>
-            ))}
-          </div>
-        )}
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Upload, X, Image as ImageIcon, RefreshCw, FolderOpen, Link as LinkIcon, Check } from 'lucide-react';
+import { Upload, X, RefreshCw, FolderOpen, Link as LinkIcon, Check } from 'lucide-react';
 import { usePortfolio } from '../../context/PortfolioContext';
 import { processImageFile } from '../../lib/imageUtils';
 
@@ -59,80 +59,81 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
         usageCount: 1,
       });
     } catch (err) {
-      console.error('Image processing failed:', err);
-      setUploadError('Failed to process image. Please try another file.');
+      console.error(err);
+      setUploadError('Failed to process image. Try a smaller file.');
     } finally {
       setIsProcessing(false);
-      if (fileInputRef.current) {
-        fileInputRef.current.value = '';
-      }
+      if (fileInputRef.current) fileInputRef.current.value = '';
     }
   };
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
-    e.stopPropagation();
     setIsDragging(true);
   };
 
   const handleDragLeave = (e: React.DragEvent) => {
     e.preventDefault();
-    e.stopPropagation();
     setIsDragging(false);
   };
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
-    e.stopPropagation();
     setIsDragging(false);
-    handleFileSelect(e.dataTransfer.files);
+    if (e.dataTransfer.files) {
+      handleFileSelect(e.dataTransfer.files);
+    }
   };
 
   const handleApplyCustomUrl = (e: React.FormEvent) => {
     e.preventDefault();
-    if (customUrl.trim()) {
-      onChange(customUrl.trim());
-      setCustomUrl('');
-      setShowUrlInput(false);
-    }
+    if (!customUrl.trim()) return;
+    onChange(customUrl.trim());
+    setCustomUrl('');
+    setShowUrlInput(false);
   };
 
-  const aspectClass = {
-    video: 'aspect-video max-h-48',
-    wide: 'h-44',
-    square: 'aspect-square max-h-44',
-    portrait: 'aspect-[3/4] max-h-56',
-    auto: 'min-h-[140px] max-h-60',
-  }[aspectRatio];
+  const aspectClass =
+    aspectRatio === 'video'
+      ? 'aspect-video'
+      : aspectRatio === 'square'
+      ? 'aspect-square'
+      : aspectRatio === 'portrait'
+      ? 'aspect-[3/4]'
+      : aspectRatio === 'wide'
+      ? 'aspect-[16/7]'
+      : 'min-h-[140px]';
 
   return (
-    <div className={`space-y-2 text-xs ${className}`}>
+    <div className={`space-y-2 text-white ${className}`}>
       {/* Label Bar */}
       <div className="flex items-center justify-between">
-        <label className="block font-semibold text-[#1F2A37]">
-          {label} {required && <span className="text-[#F2685F]">*</span>}
-          {sublabel && <span className="font-normal text-gray-500 ml-1.5">{sublabel}</span>}
-        </label>
+        <div>
+          <label className="text-xs font-semibold text-slate-200">
+            {label} {required && <span className="text-red-400">*</span>}
+          </label>
+          {sublabel && <span className="text-[11px] text-slate-400 ml-1.5">{sublabel}</span>}
+        </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           {media.length > 0 && (
             <button
               type="button"
               onClick={() => setShowMediaPicker(!showMediaPicker)}
-              className="text-[11px] text-[#37B294] hover:text-[#2d9178] font-medium flex items-center gap-1 cursor-pointer"
+              className="text-[11px] text-[#00E599] hover:underline font-semibold flex items-center gap-1 cursor-pointer"
             >
               <FolderOpen className="w-3.5 h-3.5" />
-              <span>Browse Library</span>
+              <span>Browse Media ({media.length})</span>
             </button>
           )}
 
           <button
             type="button"
             onClick={() => setShowUrlInput(!showUrlInput)}
-            className="text-[11px] text-gray-400 hover:text-gray-600 flex items-center gap-1 cursor-pointer"
+            className="text-[11px] text-slate-400 hover:text-slate-200 flex items-center gap-1 cursor-pointer"
           >
             <LinkIcon className="w-3 h-3" />
-            <span>{showUrlInput ? 'Hide URL' : 'Use URL'}</span>
+            <span>{showUrlInput ? 'Hide Link' : 'Paste Link'}</span>
           </button>
         </div>
       </div>
@@ -148,32 +149,31 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
 
       {/* Image Preview or Upload Button Zone */}
       {value ? (
-        <div className="relative rounded-2xl overflow-hidden border-2 border-[#E8F7F2] bg-[#F7FCFA] shadow-xs group">
-          <div className={`${aspectClass} w-full flex items-center justify-center p-2 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:12px_12px]`}>
+        <div className="relative rounded-2xl overflow-hidden border border-slate-700 bg-[#080B11] shadow-md group">
+          <div className={`${aspectClass} w-full flex items-center justify-center p-2 bg-[#05070B]`}>
             <img
               src={value}
               alt="Preview"
               className="max-h-full max-w-full object-contain rounded-xl shadow-xs transition-transform group-hover:scale-[1.01]"
               onError={(e) => {
-                // Keep image box but indicate fallback
                 (e.currentTarget as HTMLImageElement).classList.add('opacity-40');
               }}
             />
           </div>
 
           {/* Quick Action Overlay Controls */}
-          <div className="p-2.5 bg-white border-t border-gray-100 flex items-center justify-between gap-2">
-            <div className="flex items-center gap-1.5 text-[11px] text-emerald-700 font-medium truncate">
-              <Check className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" />
-              <span className="truncate">Image selected</span>
+          <div className="p-2.5 bg-[#0D121D] border-t border-slate-800 flex items-center justify-between gap-2">
+            <div className="flex items-center gap-1.5 text-[11px] text-[#00E599] font-medium truncate">
+              <Check className="w-3.5 h-3.5 flex-shrink-0" />
+              <span className="truncate">Visual asset selected</span>
             </div>
 
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-2">
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={isProcessing}
-                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-[#E8F7F2] text-[#37B294] hover:bg-[#d4f2e7] font-semibold text-[11px] transition-colors cursor-pointer"
+                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-[#00E599]/15 text-[#00E599] hover:bg-[#00E599]/25 font-semibold text-[11px] transition-colors cursor-pointer border border-[#00E599]/30"
               >
                 <RefreshCw className={`w-3 h-3 ${isProcessing ? 'animate-spin' : ''}`} />
                 <span>Replace Image</span>
@@ -182,7 +182,7 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
               <button
                 type="button"
                 onClick={() => onChange('')}
-                className="p-1.5 rounded-full text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors cursor-pointer"
+                className="p-1.5 rounded-full text-slate-400 hover:text-red-400 hover:bg-slate-800 transition-colors cursor-pointer"
                 title="Remove image"
               >
                 <X className="w-4 h-4" />
@@ -196,21 +196,21 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
-          className={`border-2 border-dashed rounded-2xl p-5 text-center transition-all flex flex-col items-center justify-center gap-2.5 ${
+          className={`border-2 border-dashed rounded-2xl p-6 text-center transition-all flex flex-col items-center justify-center gap-2.5 ${
             isDragging
-              ? 'border-[#4CC9A7] bg-[#E8F7F2]/50 scale-[1.01]'
-              : 'border-gray-200 bg-[#F9FBFA] hover:border-[#4CC9A7] hover:bg-[#F2FAF7]'
+              ? 'border-[#00E599] bg-[#00E599]/10 scale-[1.01]'
+              : 'border-slate-700 bg-[#080B11] hover:border-[#00E599] hover:bg-[#0D121D]'
           }`}
         >
-          <div className="w-12 h-12 rounded-2xl bg-[#E8F7F2] text-[#37B294] flex items-center justify-center shadow-xs">
+          <div className="w-12 h-12 rounded-2xl bg-[#00E599]/15 text-[#00E599] border border-[#00E599]/30 flex items-center justify-center shadow-xs">
             <Upload className={`w-6 h-6 ${isProcessing ? 'animate-bounce' : ''}`} />
           </div>
 
           <div>
-            <p className="text-xs font-bold text-[#1F2A37]">
+            <p className="text-xs font-bold text-white">
               {isProcessing ? 'Processing image...' : 'Upload Image from Device'}
             </p>
-            <p className="text-[11px] text-[#9CA3AF] mt-0.5">{helperText}</p>
+            <p className="text-[11px] text-slate-400 mt-0.5">{helperText}</p>
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
@@ -218,7 +218,7 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
               type="button"
               onClick={() => fileInputRef.current?.click()}
               disabled={isProcessing}
-              className="inline-flex items-center gap-1.5 px-5 py-2 rounded-full bg-[#4CC9A7] hover:bg-[#37B294] text-white text-xs font-semibold shadow-xs transition-all cursor-pointer hover:shadow-md active:scale-95"
+              className="inline-flex items-center gap-1.5 px-5 py-2 rounded-full bg-[#00E599] hover:bg-[#00B377] text-black text-xs font-bold shadow-md transition-all cursor-pointer active:scale-95"
             >
               <Upload className="w-3.5 h-3.5" />
               <span>Choose Image File</span>
@@ -228,9 +228,9 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
               <button
                 type="button"
                 onClick={() => setShowMediaPicker(true)}
-                className="inline-flex items-center gap-1 px-3.5 py-2 rounded-full border border-gray-200 text-[#1F2A37] hover:bg-white text-xs font-medium transition-colors cursor-pointer"
+                className="inline-flex items-center gap-1 px-4 py-2 rounded-full border border-slate-700 text-slate-300 hover:text-white hover:bg-slate-800 text-xs font-semibold transition-colors cursor-pointer"
               >
-                <FolderOpen className="w-3.5 h-3.5 text-[#37B294]" />
+                <FolderOpen className="w-3.5 h-3.5 text-[#00E599]" />
                 <span>Pick Existing</span>
               </button>
             )}
@@ -240,7 +240,7 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
 
       {/* Upload Error Banner */}
       {uploadError && (
-        <p className="text-[11px] text-red-500 font-medium px-2">{uploadError}</p>
+        <p className="text-[11px] text-red-400 font-medium px-2">{uploadError}</p>
       )}
 
       {/* Optional Collapsible URL Input fallback */}
@@ -251,32 +251,32 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
             value={customUrl}
             onChange={(e) => setCustomUrl(e.target.value)}
             placeholder="Paste external image link (https://...)"
-            className="flex-1 text-xs px-3 py-2 rounded-xl border border-gray-200 outline-none focus:border-[#4CC9A7]"
+            className="flex-1 text-xs px-3.5 py-2 rounded-xl bg-[#080B11] border border-slate-700 text-white outline-none focus:border-[#00E599]"
           />
           <button
             type="submit"
-            className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-[#1F2A37] text-xs font-semibold rounded-xl cursor-pointer"
+            className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold rounded-xl cursor-pointer"
           >
             Apply
           </button>
         </form>
       )}
 
-      {/* Media Picker Modal / Drawer */}
+      {/* Media Picker Modal */}
       {showMediaPicker && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-5 shadow-2xl border border-[#D8F2E9] max-h-[85vh] flex flex-col">
-            <div className="flex items-center justify-between pb-3 border-b border-gray-100 mb-3">
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-[#0F1522] rounded-3xl max-w-lg w-full p-5 shadow-2xl border border-slate-700 max-h-[85vh] flex flex-col text-white animate-in zoom-in-95">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-800 mb-3">
               <div>
-                <h4 className="text-sm font-bold text-[#1F2A37]">Select From Media Library</h4>
-                <p className="text-[11px] text-[#9CA3AF]">
+                <h4 className="text-sm font-bold text-white">Select From Media Library</h4>
+                <p className="text-[11px] text-slate-400">
                   Choose any image previously added to your portfolio
                 </p>
               </div>
               <button
                 type="button"
                 onClick={() => setShowMediaPicker(false)}
-                className="p-1 rounded-full text-gray-400 hover:text-gray-600 cursor-pointer"
+                className="p-1 rounded-full text-slate-400 hover:text-white cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -290,28 +290,28 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
                     onChange(item.url);
                     setShowMediaPicker(false);
                   }}
-                  className="group rounded-xl border border-gray-200 hover:border-[#4CC9A7] overflow-hidden cursor-pointer p-1.5 bg-[#F7FCFA] hover:shadow-md transition-all flex flex-col items-center"
+                  className="group rounded-xl border border-slate-800 hover:border-[#00E599] overflow-hidden cursor-pointer p-1.5 bg-[#080B11] hover:shadow-md transition-all flex flex-col items-center"
                 >
-                  <div className="w-full h-24 rounded-lg overflow-hidden bg-white flex items-center justify-center">
+                  <div className="w-full h-24 rounded-lg overflow-hidden bg-black flex items-center justify-center">
                     <img
                       src={item.url}
                       alt={item.name}
                       className="max-h-full max-w-full object-cover group-hover:scale-105 transition-transform"
                     />
                   </div>
-                  <span className="text-[10px] font-semibold text-[#1F2A37] truncate w-full text-center mt-1.5 px-1">
+                  <span className="text-[10px] font-semibold text-slate-200 truncate w-full text-center mt-1.5 px-1">
                     {item.name}
                   </span>
-                  <span className="text-[9px] text-gray-400">{item.size}</span>
+                  <span className="text-[9px] text-slate-500">{item.size}</span>
                 </div>
               ))}
             </div>
 
-            <div className="pt-3 border-t border-gray-100 flex justify-end">
+            <div className="pt-3 border-t border-slate-800 flex justify-end">
               <button
                 type="button"
                 onClick={() => setShowMediaPicker(false)}
-                className="px-4 py-1.5 rounded-full border border-gray-200 text-xs font-semibold text-[#1F2A37]"
+                className="px-4 py-1.5 rounded-full border border-slate-700 text-xs font-semibold text-slate-300 hover:bg-slate-800"
               >
                 Close
               </button>

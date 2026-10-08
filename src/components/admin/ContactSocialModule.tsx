@@ -68,10 +68,10 @@ export const ContactSocialModule: React.FC<ContactSocialModuleProps> = ({ onShow
 
   const handleOpenAddSocial = () => {
     setEditingSocial(null);
-    setPlatform('Threads');
-    setLabel('thr');
-    setUrl('https://threads.net/@ashhardesigns');
-    setIcon('threads');
+    setPlatform('Instagram');
+    setLabel('ig');
+    setUrl('https://instagram.com/nexo.creativestudio');
+    setIcon('instagram');
     setEnabled(true);
     setModalOpen(true);
   };
@@ -99,7 +99,7 @@ export const ContactSocialModule: React.FC<ContactSocialModuleProps> = ({ onShow
         icon,
         enabled,
       });
-      onShowToast('Profile Updated', `${platform} link updated.`);
+      onShowToast('Profile Updated', `Updated ${platform} link.`);
     } else {
       const newProfile: SocialProfile = {
         id: `soc-${Date.now()}`,
@@ -179,20 +179,20 @@ export const ContactSocialModule: React.FC<ContactSocialModuleProps> = ({ onShow
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-white">
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-[#1F2A37]">Contact &amp; Social Networks</h2>
-          <p className="text-xs text-[#6B7280]">
-            Update direct contact details, footer CTA banner copy, and manage custom social media profiles.
+          <h2 className="text-xl font-bold text-white font-sans">Contact &amp; Social Networks</h2>
+          <p className="text-xs text-slate-400">
+            Update studio contact details, footer CTA banner copy, and social media links.
           </p>
         </div>
 
         <button
           type="button"
           onClick={handleSaveContact}
-          className="inline-flex items-center gap-1.5 bg-[#4CC9A7] hover:bg-[#37B294] text-white text-xs font-semibold px-5 py-2.5 rounded-full transition-all shadow-xs cursor-pointer self-start sm:self-auto"
+          className="inline-flex items-center gap-1.5 bg-[#00E599] hover:bg-[#00B377] text-black text-xs font-bold px-6 py-2.5 rounded-full transition-all shadow-[0_0_15px_rgba(0,229,153,0.3)] cursor-pointer self-start sm:self-auto"
         >
           <Save className="w-4 h-4" />
           <span>Save Contact Changes</span>
@@ -203,98 +203,98 @@ export const ContactSocialModule: React.FC<ContactSocialModuleProps> = ({ onShow
         {/* Left Column: Direct Contact & CTA Banner */}
         <div className="lg:col-span-6 space-y-6">
           {/* Direct Contact Information */}
-          <div className="bg-white p-6 rounded-3xl border border-[#E8F7F2] shadow-sm space-y-4">
-            <h3 className="text-sm font-bold text-[#1F2A37] border-b border-gray-100 pb-2">
+          <div className="bg-[#0F1522] p-6 rounded-3xl border border-slate-800 shadow-xl space-y-4">
+            <h3 className="text-sm font-bold text-white border-b border-slate-800 pb-2 font-sans">
               Direct Contact Details
             </h3>
 
             <div>
-              <label className="block text-xs font-semibold text-[#1F2A37] mb-1">Inquiry Email</label>
+              <label className="block text-xs font-semibold text-slate-300 mb-1">Inquiry Email</label>
               <div className="relative">
                 <input
                   type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full text-xs pl-8 pr-3 py-2 rounded-xl border border-gray-200 outline-none focus:border-[#4CC9A7]"
+                  className="w-full text-xs pl-9 pr-3.5 py-2.5 rounded-xl bg-[#080B11] border border-slate-700 text-white outline-none focus:border-[#00E599]"
                 />
-                <Mail className="w-4 h-4 text-[#4CC9A7] absolute left-2.5 top-2.5" />
+                <Mail className="w-4 h-4 text-[#00E599] absolute left-3 top-3" />
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-semibold text-[#1F2A37] mb-1">Phone Number</label>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">Phone Number</label>
                 <div className="relative">
                   <input
                     type="text"
                     required
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    className="w-full text-xs pl-8 pr-3 py-2 rounded-xl border border-gray-200 outline-none focus:border-[#4CC9A7]"
+                    className="w-full text-xs pl-9 pr-3.5 py-2.5 rounded-xl bg-[#080B11] border border-slate-700 text-white outline-none focus:border-[#00E599]"
                   />
-                  <Phone className="w-4 h-4 text-[#4CC9A7] absolute left-2.5 top-2.5" />
+                  <Phone className="w-4 h-4 text-[#00E599] absolute left-3 top-3" />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#1F2A37] mb-1">Location</label>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">Studio Location</label>
                 <div className="relative">
                   <input
                     type="text"
                     required
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
-                    className="w-full text-xs pl-8 pr-3 py-2 rounded-xl border border-gray-200 outline-none focus:border-[#4CC9A7]"
+                    className="w-full text-xs pl-9 pr-3.5 py-2.5 rounded-xl bg-[#080B11] border border-slate-700 text-white outline-none focus:border-[#00E599]"
                   />
-                  <MapPin className="w-4 h-4 text-[#4CC9A7] absolute left-2.5 top-2.5" />
+                  <MapPin className="w-4 h-4 text-[#00E599] absolute left-3 top-3" />
                 </div>
               </div>
             </div>
           </div>
 
           {/* CTA Banner Copy */}
-          <div className="bg-white p-6 rounded-3xl border border-[#E8F7F2] shadow-sm space-y-4">
-            <h3 className="text-sm font-bold text-[#1F2A37] border-b border-gray-100 pb-2">
+          <div className="bg-[#0F1522] p-6 rounded-3xl border border-slate-800 shadow-xl space-y-4">
+            <h3 className="text-sm font-bold text-white border-b border-slate-800 pb-2 font-sans">
               CTA Banner Content (Above Footer)
             </h3>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-semibold text-[#1F2A37] mb-1">
+                <label className="block text-xs font-semibold text-slate-300 mb-1">
                   Main Headline
                 </label>
                 <input
                   type="text"
                   value={ctaHeadline}
                   onChange={(e) => setCtaHeadline(e.target.value)}
-                  className="w-full text-xs px-3 py-2 rounded-xl border border-gray-200 outline-none focus:border-[#4CC9A7]"
+                  className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-[#080B11] border border-slate-700 text-white outline-none focus:border-[#00E599]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#1F2A37] mb-1">
-                  Coral Highlighted Word
+                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                  Accent Highlighted Word
                 </label>
                 <input
                   type="text"
                   value={ctaHighlight}
                   onChange={(e) => setCtaHighlight(e.target.value)}
                   placeholder="together!"
-                  className="w-full text-xs px-3 py-2 rounded-xl border border-gray-200 focus:border-[#F2685F] outline-none text-[#F2685F] font-semibold"
+                  className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-[#080B11] border border-slate-700 focus:border-[#FF5A36] outline-none text-[#FF5A36] font-semibold"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#1F2A37] mb-1">
+              <label className="block text-xs font-semibold text-slate-300 mb-1">
                 Sub-headline Text
               </label>
               <textarea
                 rows={2}
                 value={ctaSubtext}
                 onChange={(e) => setCtaSubtext(e.target.value)}
-                className="w-full text-xs px-3 py-2 rounded-xl border border-gray-200 outline-none resize-none focus:border-[#4CC9A7]"
+                className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-[#080B11] border border-slate-700 text-white outline-none resize-none focus:border-[#00E599] leading-relaxed"
               />
             </div>
           </div>
@@ -302,22 +302,22 @@ export const ContactSocialModule: React.FC<ContactSocialModuleProps> = ({ onShow
 
         {/* Right Column: Social Media Profiles Manager */}
         <div className="lg:col-span-6 space-y-4">
-          <div className="bg-white p-6 rounded-3xl border border-[#E8F7F2] shadow-sm space-y-4">
-            <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+          <div className="bg-[#0F1522] p-6 rounded-3xl border border-slate-800 shadow-xl space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <div>
-                <h3 className="text-sm font-bold text-[#1F2A37] flex items-center gap-1.5">
-                  <Share2 className="w-4 h-4 text-[#4CC9A7]" />
+                <h3 className="text-sm font-bold text-white flex items-center gap-2 font-sans">
+                  <Share2 className="w-4 h-4 text-[#00E599]" />
                   <span>Social Media Profiles &amp; Links</span>
                 </h3>
-                <p className="text-[11px] text-[#6B7280]">
-                  Add, toggle, or edit any social media handles shown on Hero and Footer.
+                <p className="text-[11px] text-slate-400">
+                  Add, toggle, or edit any handles shown on Hero and Footer.
                 </p>
               </div>
 
               <button
                 type="button"
                 onClick={handleOpenAddSocial}
-                className="inline-flex items-center gap-1 bg-[#E8F7F2] hover:bg-[#4CC9A7] text-[#37B294] hover:text-white text-xs font-semibold px-3 py-1.5 rounded-full transition-all cursor-pointer"
+                className="inline-flex items-center gap-1 bg-[#00E599]/15 hover:bg-[#00E599] text-[#00E599] hover:text-black border border-[#00E599]/30 text-xs font-bold px-3.5 py-1.5 rounded-full transition-all cursor-pointer"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>Add Profile</span>
@@ -331,21 +331,21 @@ export const ContactSocialModule: React.FC<ContactSocialModuleProps> = ({ onShow
                   key={soc.id}
                   className={`p-3 rounded-2xl border transition-all flex items-center justify-between gap-3 ${
                     soc.enabled
-                      ? 'bg-white border-[#E8F7F2] hover:border-[#4CC9A7]/40 shadow-xs'
-                      : 'bg-gray-50 border-gray-200 opacity-60'
+                      ? 'bg-[#080B11] border-slate-800 hover:border-slate-700 shadow-xs'
+                      : 'bg-[#080B11]/50 border-slate-800/40 opacity-50'
                   }`}
                 >
                   <div className="flex items-center gap-3 min-w-0">
                     {/* Circle Avatar badge */}
-                    <div className="w-9 h-9 rounded-full border border-[#4CC9A7]/60 text-[#4CC9A7] bg-[#F7FCFA] flex items-center justify-center text-xs font-bold flex-shrink-0">
+                    <div className="w-9 h-9 rounded-full border border-[#00E599]/40 text-[#00E599] bg-[#00E599]/10 flex items-center justify-center text-xs font-bold flex-shrink-0">
                       {soc.label}
                     </div>
 
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
-                        <span className="text-xs font-bold text-[#1F2A37]">{soc.platform}</span>
+                        <span className="text-xs font-bold text-white font-sans">{soc.platform}</span>
                         {!soc.enabled && (
-                          <span className="text-[10px] bg-gray-200 text-gray-600 px-1.5 py-0.2 rounded-full font-medium">
+                          <span className="text-[10px] bg-slate-800 text-slate-400 px-2 py-0.2 rounded-full font-medium">
                             Hidden
                           </span>
                         )}
@@ -354,7 +354,7 @@ export const ContactSocialModule: React.FC<ContactSocialModuleProps> = ({ onShow
                         href={soc.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-[11px] text-[#9CA3AF] hover:text-[#4CC9A7] flex items-center gap-1 truncate block max-w-[200px] sm:max-w-xs"
+                        className="text-[11px] text-slate-400 hover:text-[#00E599] flex items-center gap-1 truncate block max-w-[200px] sm:max-w-xs transition-colors"
                       >
                         <span className="truncate">{soc.url}</span>
                         <ExternalLink className="w-2.5 h-2.5 flex-shrink-0" />
@@ -368,7 +368,7 @@ export const ContactSocialModule: React.FC<ContactSocialModuleProps> = ({ onShow
                       type="button"
                       onClick={() => handleMove(idx, 'up')}
                       disabled={idx === 0}
-                      className="p-1 text-gray-400 hover:text-[#1F2A37] disabled:opacity-20 cursor-pointer"
+                      className="p-1 text-slate-400 hover:text-white disabled:opacity-20 cursor-pointer"
                       title="Move up"
                     >
                       <MoveUp className="w-3.5 h-3.5" />
@@ -377,7 +377,7 @@ export const ContactSocialModule: React.FC<ContactSocialModuleProps> = ({ onShow
                       type="button"
                       onClick={() => handleMove(idx, 'down')}
                       disabled={idx === socialProfiles.length - 1}
-                      className="p-1 text-gray-400 hover:text-[#1F2A37] disabled:opacity-20 cursor-pointer"
+                      className="p-1 text-slate-400 hover:text-white disabled:opacity-20 cursor-pointer"
                       title="Move down"
                     >
                       <MoveDown className="w-3.5 h-3.5" />
@@ -387,8 +387,8 @@ export const ContactSocialModule: React.FC<ContactSocialModuleProps> = ({ onShow
                       onClick={() => handleToggleEnabled(soc)}
                       className={`p-1.5 rounded-lg text-xs cursor-pointer ${
                         soc.enabled
-                          ? 'text-[#4CC9A7] hover:bg-[#E8F7F2]'
-                          : 'text-gray-400 hover:bg-gray-200'
+                          ? 'text-[#00E599] hover:bg-[#00E599]/10'
+                          : 'text-slate-500 hover:bg-slate-800'
                       }`}
                       title={soc.enabled ? 'Disable / Hide' : 'Enable / Show'}
                     >
@@ -397,7 +397,7 @@ export const ContactSocialModule: React.FC<ContactSocialModuleProps> = ({ onShow
                     <button
                       type="button"
                       onClick={() => handleOpenEditSocial(soc)}
-                      className="p-1.5 rounded-lg text-gray-500 hover:text-[#4CC9A7] hover:bg-[#E8F7F2] cursor-pointer"
+                      className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 cursor-pointer"
                       title="Edit Profile"
                     >
                       <Edit className="w-3.5 h-3.5" />
@@ -405,7 +405,7 @@ export const ContactSocialModule: React.FC<ContactSocialModuleProps> = ({ onShow
                     <button
                       type="button"
                       onClick={() => handleDeleteSocial(soc.id, soc.platform)}
-                      className="p-1.5 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 cursor-pointer"
+                      className="p-1.5 rounded-lg text-slate-400 hover:text-red-400 hover:bg-red-950/40 cursor-pointer"
                       title="Delete Profile"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -416,8 +416,8 @@ export const ContactSocialModule: React.FC<ContactSocialModuleProps> = ({ onShow
             </div>
 
             {/* Live Preview Pill Strip */}
-            <div className="pt-3 border-t border-gray-100">
-              <span className="text-[11px] font-semibold text-[#6B7280] block mb-2">
+            <div className="pt-3 border-t border-slate-800">
+              <span className="text-[11px] font-semibold text-slate-400 block mb-2 font-mono">
                 Live Public Preview:
               </span>
               <div className="flex flex-wrap items-center gap-2">
@@ -426,7 +426,7 @@ export const ContactSocialModule: React.FC<ContactSocialModuleProps> = ({ onShow
                   .map((s) => (
                     <span
                       key={s.id}
-                      className="w-8 h-8 rounded-full border border-[#4CC9A7] text-[#4CC9A7] flex items-center justify-center text-xs font-bold"
+                      className="w-8 h-8 rounded-full border border-slate-700 hover:border-[#00E599] text-slate-300 hover:text-[#00E599] bg-[#080B11] flex items-center justify-center text-xs font-bold transition-colors"
                     >
                       {s.label}
                     </span>
@@ -439,16 +439,16 @@ export const ContactSocialModule: React.FC<ContactSocialModuleProps> = ({ onShow
 
       {/* Add / Edit Social Profile Modal */}
       {modalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-[#D8F2E9]">
-            <div className="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
-              <h3 className="text-base font-bold text-[#1F2A37]">
-                {editingSocial ? `Edit ${editingSocial.platform}` : 'Add New Social Profile'}
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-[#0F1522] rounded-3xl max-w-md w-full p-6 sm:p-7 shadow-2xl border border-slate-700 text-white animate-in zoom-in-95">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+              <h3 className="text-base font-bold text-white font-sans">
+                {editingSocial ? `Edit ${editingSocial.platform}` : 'Add Social Profile'}
               </h3>
               <button
                 type="button"
                 onClick={() => setModalOpen(false)}
-                className="text-gray-400 hover:text-gray-600 p-1"
+                className="text-slate-400 hover:text-white p-1 cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -456,7 +456,7 @@ export const ContactSocialModule: React.FC<ContactSocialModuleProps> = ({ onShow
 
             <form onSubmit={handleSaveSocialModal} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-[#1F2A37] mb-1">
+                <label className="block text-xs font-semibold text-slate-300 mb-1">
                   Platform Name *
                 </label>
                 <input
@@ -470,13 +470,13 @@ export const ContactSocialModule: React.FC<ContactSocialModuleProps> = ({ onShow
                     }
                   }}
                   placeholder="e.g. YouTube, TikTok, Threads, GitHub"
-                  className="w-full text-xs px-3 py-2 rounded-xl border border-gray-200 outline-none focus:border-[#4CC9A7]"
+                  className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-[#080B11] border border-slate-700 text-white outline-none focus:border-[#00E599]"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-[#1F2A37] mb-1">
+                  <label className="block text-xs font-semibold text-slate-300 mb-1">
                     Circle Badge Label (2-3 chars) *
                   </label>
                   <input
@@ -486,16 +486,16 @@ export const ContactSocialModule: React.FC<ContactSocialModuleProps> = ({ onShow
                     value={label}
                     onChange={(e) => setLabel(e.target.value)}
                     placeholder="e.g. yt, ig, in, git"
-                    className="w-full text-xs px-3 py-2 rounded-xl border border-gray-200 outline-none focus:border-[#4CC9A7]"
+                    className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-[#080B11] border border-slate-700 text-white outline-none focus:border-[#00E599]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-[#1F2A37] mb-1">Icon Style</label>
+                  <label className="block text-xs font-semibold text-slate-300 mb-1">Icon Style</label>
                   <select
                     value={icon}
                     onChange={(e) => setIcon(e.target.value)}
-                    className="w-full text-xs px-3 py-2 rounded-xl border border-gray-200 outline-none bg-white"
+                    className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-[#080B11] border border-slate-700 text-white outline-none"
                   >
                     <option value="globe">Globe / Web</option>
                     <option value="behance">Behance</option>
@@ -512,7 +512,7 @@ export const ContactSocialModule: React.FC<ContactSocialModuleProps> = ({ onShow
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#1F2A37] mb-1">
+                <label className="block text-xs font-semibold text-slate-300 mb-1">
                   Profile URL *
                 </label>
                 <input
@@ -521,7 +521,7 @@ export const ContactSocialModule: React.FC<ContactSocialModuleProps> = ({ onShow
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
                   placeholder="https://..."
-                  className="w-full text-xs px-3 py-2 rounded-xl border border-gray-200 outline-none focus:border-[#4CC9A7]"
+                  className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-[#080B11] border border-slate-700 text-white outline-none focus:border-[#00E599]"
                 />
               </div>
 
@@ -531,14 +531,14 @@ export const ContactSocialModule: React.FC<ContactSocialModuleProps> = ({ onShow
                   id="enabledCheck"
                   checked={enabled}
                   onChange={(e) => setEnabled(e.target.checked)}
-                  className="rounded text-[#4CC9A7] focus:ring-[#4CC9A7]"
+                  className="rounded text-[#00E599] accent-[#00E599]"
                 />
-                <label htmlFor="enabledCheck" className="text-xs font-semibold text-[#1F2A37] cursor-pointer">
-                  Display profile actively on public portfolio
+                <label htmlFor="enabledCheck" className="text-xs font-semibold text-slate-300 cursor-pointer">
+                  Display profile actively on public site
                 </label>
               </div>
 
-              <div className="flex items-center justify-between gap-2 pt-3 border-t border-gray-100">
+              <div className="flex items-center justify-between gap-2 pt-3 border-t border-slate-800">
                 {editingSocial ? (
                   <button
                     type="button"
@@ -549,7 +549,7 @@ export const ContactSocialModule: React.FC<ContactSocialModuleProps> = ({ onShow
                         title: `${editingSocial.platform} link`,
                       });
                     }}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-red-200 text-xs font-semibold text-red-600 hover:bg-red-50 hover:border-red-300 transition-colors cursor-pointer"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-red-900/60 text-xs font-semibold text-red-400 hover:bg-red-950/40 transition-colors cursor-pointer"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                     <span>Delete Link</span>
@@ -562,13 +562,13 @@ export const ContactSocialModule: React.FC<ContactSocialModuleProps> = ({ onShow
                   <button
                     type="button"
                     onClick={() => setModalOpen(false)}
-                    className="px-4 py-2 rounded-full border border-gray-200 text-xs font-semibold text-[#1F2A37] hover:bg-gray-50"
+                    className="px-4 py-2 rounded-full border border-slate-700 text-xs font-semibold text-slate-300 hover:text-white cursor-pointer"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-5 py-2 rounded-full bg-[#4CC9A7] hover:bg-[#37B294] text-white text-xs font-semibold shadow-xs"
+                    className="px-5 py-2 rounded-full bg-[#00E599] hover:bg-[#00B377] text-black text-xs font-bold shadow-md cursor-pointer"
                   >
                     {editingSocial ? 'Save Changes' : 'Add Profile'}
                   </button>

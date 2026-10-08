@@ -21,6 +21,9 @@ import {
   Clock,
   Sparkles,
   RefreshCw,
+  Save,
+  CheckCircle,
+  X,
 } from 'lucide-react';
 
 interface SettingsModuleProps {
@@ -43,7 +46,9 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({ onShowToast }) =
     testDatabaseConnection,
   } = usePortfolio();
 
-  const [activeTab, setActiveTab] = useState<'general' | 'availability' | 'security' | 'notifications' | 'visibility' | 'backup'>('general');
+  const [activeTab, setActiveTab] = useState<
+    'general' | 'availability' | 'security' | 'notifications' | 'visibility' | 'backup'
+  >('general');
   const [testingSupabase, setTestingSupabase] = useState(false);
   const [supabaseTestMsg, setSupabaseTestMsg] = useState<string | null>(null);
   const [syncingSupabase, setSyncingSupabase] = useState(false);
@@ -56,18 +61,18 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({ onShowToast }) =
   const [phone, setPhone] = useState(profile.phone);
   const [location, setLocation] = useState(profile.location);
   const [timezone, setTimezone] = useState('Asia/Kolkata (IST +05:30)');
-  const [currency, setCurrency] = useState('USD ($)');
+  const [currency, setCurrency] = useState('INR (₹)');
 
   // Availability State
   const [isAvailable, setIsAvailable] = useState(true);
   const [availabilityBadge, setAvailabilityBadge] = useState('Available for Q2 & Q3 Projects');
   const [badgeColor, setBadgeColor] = useState<'teal' | 'coral' | 'amber'>('teal');
-  const [nextSlot, setNextSlot] = useState('April 2024');
-  const [minBudget, setMinBudget] = useState('$3,000');
-  const [calendlyUrl, setCalendlyUrl] = useState('https://calendly.com/ashhar');
+  const [nextSlot, setNextSlot] = useState('Immediate / Next Sprint');
+  const [minBudget, setMinBudget] = useState('₹25,000');
+  const [calendlyUrl, setCalendlyUrl] = useState('https://calendly.com/nexo-studio');
 
   // Security State
-  const [adminName, setAdminName] = useState(advancedSettings.adminName || 'Ashhar');
+  const [adminName, setAdminName] = useState(advancedSettings.adminName || 'NEXO Studio');
   const [adminEmail, setAdminEmail] = useState(advancedSettings.adminEmail || 'agesbdidgsgsd@gmail.com');
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -90,9 +95,9 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({ onShowToast }) =
   // Notifications State
   const [emailNotifications, setEmailNotifications] = useState(advancedSettings.emailNotifications);
   const [autoReplyEnabled, setAutoReplyEnabled] = useState(true);
-  const [autoReplySubject, setAutoReplySubject] = useState('Thank you for reaching out to Ashhar Studio!');
+  const [autoReplySubject, setAutoReplySubject] = useState('Thank you for reaching out to NEXO Studio!');
   const [autoReplyMessage, setAutoReplyMessage] = useState(
-    'Hi there!\n\nThanks for your inquiry. I have received your message and will review your project brief within 24 hours.\n\nBest,\nAshhar\nUI/UX Designer'
+    'Hi there!\n\nThanks for your inquiry. We have received your project brief and will review your requirements within 24 hours.\n\nBest,\nThe NEXO Studio Team\nCreative Solutions For A Stronger Tomorrow'
   );
   const [discordWebhook, setDiscordWebhook] = useState(advancedSettings.discordWebhookUrl || '');
   const [slackWebhook, setSlackWebhook] = useState(advancedSettings.slackWebhookUrl || '');
@@ -141,31 +146,27 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({ onShowToast }) =
         return;
       }
       if (newPassword !== confirmPassword) {
-        onShowToast('Mismatch', 'New passwords do not match. Please re-enter.');
+        onShowToast('Password Mismatch', 'New password confirmation does not match.');
         return;
       }
-      updatedPassword = newPassword;
+      updatedPassword = newPassword.trim();
     }
-
-    setCurrentPassword('');
-    setNewPassword('');
-    setConfirmPassword('');
 
     setAdvancedSettings({
       ...advancedSettings,
-      adminName,
-      adminEmail: adminEmail.trim().toLowerCase(),
+      adminEmail: adminEmail.trim(),
+      adminName: adminName.trim(),
       adminPassword: updatedPassword,
       twoFactorEnabled,
       sessionTimeoutDays,
       honeypotStrict,
     });
 
-    addAuditLog(
-      'Security Credentials Updated',
-      `Admin login email set to "${adminEmail.trim().toLowerCase()}"${newPassword.trim() ? ' with new password' : ''}`
-    );
-    onShowToast('Credentials Saved', 'Admin login email and security credentials saved successfully.');
+    setCurrentPassword('');
+    setNewPassword('');
+    setConfirmPassword('');
+    addAuditLog('Security Credentials Updated', `Admin email set to ${adminEmail.trim()}`);
+    onShowToast('Security Updated', 'Admin credentials and 2FA settings saved successfully.');
   };
 
   // Save Notifications
@@ -174,11 +175,11 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({ onShowToast }) =
     setAdvancedSettings({
       ...advancedSettings,
       emailNotifications,
-      discordWebhookUrl: discordWebhook,
-      slackWebhookUrl: slackWebhook,
+      discordWebhookUrl: discordWebhook.trim(),
+      slackWebhookUrl: slackWebhook.trim(),
     });
-    addAuditLog('Notifications Updated', 'Webhook and auto-responder settings saved');
-    onShowToast('Notifications Saved', 'Notification channels and auto-responder updated.');
+    addAuditLog('Notifications Updated', `Email alerts: ${emailNotifications ? 'On' : 'Off'}`);
+    onShowToast('Notifications Saved', 'Webhook routing and alert preferences stored.');
   };
 
   // Save Maintenance
@@ -187,83 +188,112 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({ onShowToast }) =
     setAdvancedSettings({
       ...advancedSettings,
       maintenanceMode,
-      maintenanceNotice,
+      maintenanceNotice: maintenanceNotice.trim(),
     });
-    addAuditLog('Maintenance Mode Changed', maintenanceMode ? 'Enabled on public site' : 'Disabled');
-    onShowToast('Visibility Updated', `Maintenance mode is ${maintenanceMode ? 'ACTIVE' : 'inactive'}.`);
+    addAuditLog('Maintenance Updated', `Maintenance Mode: ${maintenanceMode ? 'Enabled' : 'Disabled'}`);
+    onShowToast('Visibility Saved', 'Maintenance mode and section display toggles updated.');
   };
 
-  // Export JSON Backup
-  const handleExport = () => {
+  // Backup & Import Handlers
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const [resetModalOpen, setResetModalOpen] = useState(false);
+
+  const handleExportBackup = () => {
     const jsonStr = exportDataJson();
     const blob = new Blob([jsonStr], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `ashhar_portfolio_backup_${new Date().toISOString().slice(0, 10)}.json`;
+    link.download = `nexo_portfolio_backup_${new Date().toISOString().slice(0, 10)}.json`;
     link.click();
     URL.revokeObjectURL(url);
-    addAuditLog('Backup Exported', 'Full JSON snapshot downloaded');
-    onShowToast('Backup Exported', 'Downloaded full JSON portfolio snapshot.');
+    addAuditLog('Backup Exported', 'Full portfolio JSON archive generated and downloaded');
+    onShowToast('Backup Downloaded', 'Portfolio database archive saved locally.');
   };
 
-  // Import JSON Backup
-  const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
+  const handleImportFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    const file = files[0];
     const reader = new FileReader();
     reader.onload = (event) => {
       const content = event.target?.result as string;
-      const success = importDataJson(content);
-      if (success) {
-        addAuditLog('Backup Restored', `Restored from file: ${file.name}`);
-        onShowToast('Import Successful', 'Portfolio content restored from JSON.');
-      } else {
-        onShowToast('Import Error', 'Invalid JSON backup format.');
+      if (content) {
+        const ok = importDataJson(content);
+        if (ok) {
+          addAuditLog('Backup Restored', `Restored from file ${file.name}`);
+          onShowToast('Database Restored', 'All portfolio records loaded from JSON backup.');
+        } else {
+          onShowToast('Import Failed', 'Invalid JSON backup structure.');
+        }
       }
     };
     reader.readAsText(file);
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
-  // Danger Zone Factory Reset
-  const [resetConfirmationOpen, setResetConfirmationOpen] = useState(false);
-
-  const handleReset = () => {
-    setResetConfirmationOpen(true);
-  };
-
-  const handleExecuteReset = () => {
+  const handleConfirmResetDefaults = () => {
     resetAllDefaults();
-    addAuditLog('Factory Reset', 'Restored initial reference data');
-    onShowToast('Factory Reset Complete', 'All content restored to initial reference state.');
-    setResetConfirmationOpen(false);
+    setResetModalOpen(false);
+    addAuditLog('Factory Reset', 'Portfolio state restored to initial reference defaults');
+    onShowToast('Defaults Restored', 'All settings and content restored to factory state.');
+  };
+
+  const handleTestDatabase = async () => {
+    setTestingSupabase(true);
+    setSupabaseTestMsg(null);
+    try {
+      const result = await testDatabaseConnection();
+      if (result.ok) {
+        setSupabaseTestMsg(`Connected to ${dbStatus.projectRef || 'Database'} · Latency: ${result.latencyMs ?? 0}ms`);
+        onShowToast('Database Online', `Database connection verified (${result.latencyMs ?? 0}ms).`);
+      } else {
+        setSupabaseTestMsg(`Connection check: ${result.message || 'Unknown status'}`);
+        onShowToast('Database Check', result.message || 'Could not verify database connection.');
+      }
+    } catch (e: any) {
+      setSupabaseTestMsg(`Error: ${e.message}`);
+    } finally {
+      setTestingSupabase(false);
+    }
+  };
+
+  const handleSyncDatabase = async () => {
+    setSyncingSupabase(true);
+    try {
+      await refreshFromDatabase();
+      onShowToast('Database Synced', 'Local cache refreshed from database.');
+    } catch (e: any) {
+      onShowToast('Sync Error', 'Failed to pull latest records.');
+    } finally {
+      setSyncingSupabase(false);
+    }
   };
 
   return (
-    <div className="space-y-6">
-      {/* Top Header */}
+    <div className="space-y-6 text-white">
+      {/* Header Bar */}
       <div>
-        <h2 className="text-xl font-bold text-[#1F2A37] flex items-center gap-2">
-          <span>Advanced Studio Settings</span>
-          <span className="text-xs bg-[#E8F7F2] text-[#37B294] font-bold px-2.5 py-0.5 rounded-full">
-            System &amp; Security
+        <h2 className="text-xl font-bold text-white font-sans flex items-center gap-2">
+          <span>Settings &amp; System Hub</span>
+          <span className="text-xs bg-[#00E599]/15 text-[#00E599] border border-[#00E599]/30 font-bold px-3 py-0.5 rounded-full font-mono">
+            NEXO Admin Core
           </span>
         </h2>
-        <p className="text-xs text-[#6B7280]">
-          Configure availability, security credentials, webhook notifications, maintenance mode, and database backups.
+        <p className="text-xs text-slate-400 mt-0.5">
+          Configure studio availability, security credentials, webhook notifications, maintenance mode, and database backups.
         </p>
       </div>
 
       {/* Settings Navigation Tabs */}
-      <div className="flex flex-wrap items-center gap-1.5 border-b border-gray-200 pb-2">
+      <div className="flex flex-wrap items-center gap-2 border-b border-slate-800 pb-2">
         {[
           { id: 'general', label: 'General & Profile', icon: Globe },
           { id: 'availability', label: 'Availability & Booking', icon: Calendar },
           { id: 'security', label: 'Security & Access', icon: ShieldCheck },
           { id: 'notifications', label: 'Notifications & Webhooks', icon: Bell },
           { id: 'visibility', label: 'Maintenance & Visibility', icon: Eye },
-          { id: 'backup', label: 'Backup & Danger Zone', icon: Database },
+          { id: 'backup', label: 'Backup & Database', icon: Database },
         ].map((tab) => (
           <button
             key={tab.id}
@@ -271,8 +301,8 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({ onShowToast }) =
             onClick={() => setActiveTab(tab.id as typeof activeTab)}
             className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
               activeTab === tab.id
-                ? 'bg-[#4CC9A7] text-white shadow-xs'
-                : 'text-[#6B7280] hover:text-[#1F2A37] hover:bg-gray-100'
+                ? 'bg-[#00E599] text-black shadow-xs'
+                : 'text-slate-400 hover:text-white hover:bg-slate-800'
             }`}
           >
             <tab.icon className="w-3.5 h-3.5" />
@@ -283,89 +313,89 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({ onShowToast }) =
 
       {/* TAB 1: GENERAL & PROFILE */}
       {activeTab === 'general' && (
-        <form onSubmit={handleSaveGeneral} className="bg-white p-6 rounded-3xl border border-[#E8F7F2] shadow-sm space-y-6 text-xs max-w-3xl">
-          <div className="border-b border-gray-100 pb-3">
-            <h3 className="text-sm font-bold text-[#1F2A37]">Studio Identity &amp; Profile Defaults</h3>
-            <p className="text-[#6B7280]">Core name, title, and regional localization preferences.</p>
+        <form onSubmit={handleSaveGeneral} className="bg-[#0F1522] p-6 rounded-3xl border border-slate-800 shadow-xl space-y-6 text-xs max-w-3xl">
+          <div className="border-b border-slate-800 pb-3">
+            <h3 className="text-sm font-bold text-white font-sans">Studio Identity &amp; Profile Defaults</h3>
+            <p className="text-slate-400">Core brand name, role headline, and regional localization preferences.</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block font-semibold text-[#1F2A37] mb-1">First Name *</label>
+              <label className="block font-semibold text-slate-300 mb-1">Brand / Studio Name *</label>
               <input
                 type="text"
                 required
                 value={siteName}
                 onChange={(e) => setSiteName(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl border border-gray-200 outline-none focus:border-[#4CC9A7]"
+                className="w-full px-3 py-2.5 rounded-xl bg-[#080B11] border border-slate-700 text-white outline-none focus:border-[#00E599]"
               />
             </div>
 
             <div>
-              <label className="block font-semibold text-[#1F2A37] mb-1">Brand Wordmark Suffix</label>
+              <label className="block font-semibold text-slate-300 mb-1">Wordmark Suffix</label>
               <input
                 type="text"
                 value={brandSuffix}
                 onChange={(e) => setBrandSuffix(e.target.value)}
-                placeholder="Designs"
-                className="w-full px-3 py-2 rounded-xl border border-gray-200 outline-none focus:border-[#4CC9A7]"
+                placeholder="Studio"
+                className="w-full px-3 py-2.5 rounded-xl bg-[#080B11] border border-slate-700 text-white outline-none focus:border-[#00E599]"
               />
             </div>
           </div>
 
           <div>
-            <label className="block font-semibold text-[#1F2A37] mb-1">Role Subtitle *</label>
+            <label className="block font-semibold text-slate-300 mb-1">Role Subtitle *</label>
             <input
               type="text"
               required
               value={roleSubtitle}
               onChange={(e) => setRoleSubtitle(e.target.value)}
-              placeholder="UI/UX Designer"
-              className="w-full px-3 py-2 rounded-xl border border-gray-200 outline-none focus:border-[#4CC9A7]"
+              placeholder="Web Design · Poster Making · Ads Creation · Product Poster"
+              className="w-full px-3 py-2.5 rounded-xl bg-[#080B11] border border-slate-700 text-white outline-none focus:border-[#00E599]"
             />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block font-semibold text-[#1F2A37] mb-1">Primary Inquiry Email *</label>
+              <label className="block font-semibold text-slate-300 mb-1">Primary Inquiry Email *</label>
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl border border-gray-200 outline-none focus:border-[#4CC9A7]"
+                className="w-full px-3 py-2.5 rounded-xl bg-[#080B11] border border-slate-700 text-white outline-none focus:border-[#00E599]"
               />
             </div>
 
             <div>
-              <label className="block font-semibold text-[#1F2A37] mb-1">Direct Phone</label>
+              <label className="block font-semibold text-slate-300 mb-1">Direct Phone</label>
               <input
                 type="text"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl border border-gray-200 outline-none focus:border-[#4CC9A7]"
+                className="w-full px-3 py-2.5 rounded-xl bg-[#080B11] border border-slate-700 text-white outline-none focus:border-[#00E599]"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label className="block font-semibold text-[#1F2A37] mb-1">Base Location</label>
+              <label className="block font-semibold text-slate-300 mb-1">Base Location</label>
               <input
                 type="text"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
-                placeholder="Bangalore, India"
-                className="w-full px-3 py-2 rounded-xl border border-gray-200 outline-none focus:border-[#4CC9A7]"
+                placeholder="Global / Remote Studio"
+                className="w-full px-3 py-2.5 rounded-xl bg-[#080B11] border border-slate-700 text-white outline-none focus:border-[#00E599]"
               />
             </div>
 
             <div>
-              <label className="block font-semibold text-[#1F2A37] mb-1">Studio Timezone</label>
+              <label className="block font-semibold text-slate-300 mb-1">Studio Timezone</label>
               <select
                 value={timezone}
                 onChange={(e) => setTimezone(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl border border-gray-200 outline-none bg-white font-medium"
+                className="w-full px-3 py-2.5 rounded-xl bg-[#080B11] border border-slate-700 text-white outline-none focus:border-[#00E599]"
               >
                 <option value="Asia/Kolkata (IST +05:30)">Asia/Kolkata (IST +05:30)</option>
                 <option value="America/New_York (EST -05:00)">America/New_York (EST -05:00)</option>
@@ -378,11 +408,11 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({ onShowToast }) =
             </div>
 
             <div>
-              <label className="block font-semibold text-[#1F2A37] mb-1">Currency Preference</label>
+              <label className="block font-semibold text-slate-300 mb-1">Currency Preference</label>
               <select
                 value={currency}
                 onChange={(e) => setCurrency(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl border border-gray-200 outline-none bg-white font-medium"
+                className="w-full px-3 py-2.5 rounded-xl bg-[#080B11] border border-slate-700 text-white outline-none focus:border-[#00E599]"
               >
                 <option value="USD ($)">USD ($)</option>
                 <option value="EUR (€)">EUR (€)</option>
@@ -394,12 +424,12 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({ onShowToast }) =
             </div>
           </div>
 
-          <div className="pt-3 border-t border-gray-100 flex justify-end">
+          <div className="pt-3 border-t border-slate-800 flex justify-end">
             <button
               type="submit"
-              className="bg-[#4CC9A7] hover:bg-[#37B294] text-white text-xs font-semibold px-6 py-2.5 rounded-full transition-all shadow-xs cursor-pointer"
+              className="bg-[#00E599] hover:bg-[#00B377] text-black font-extrabold text-xs px-6 py-2.5 rounded-full transition-all shadow-[0_0_15px_rgba(0,229,153,0.3)] cursor-pointer"
             >
-              Save General Profile
+              Save General Settings
             </button>
           </div>
         </form>
@@ -407,19 +437,16 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({ onShowToast }) =
 
       {/* TAB 2: AVAILABILITY & BOOKING */}
       {activeTab === 'availability' && (
-        <form onSubmit={handleSaveAvailability} className="bg-white p-6 rounded-3xl border border-[#E8F7F2] shadow-sm space-y-6 text-xs max-w-3xl">
-          <div className="border-b border-gray-100 pb-3">
-            <h3 className="text-sm font-bold text-[#1F2A37]">Client Intake &amp; Booking Pipeline</h3>
-            <p className="text-[#6B7280]">Signal real-time project availability and integrate direct booking links.</p>
+        <form onSubmit={handleSaveAvailability} className="bg-[#0F1522] p-6 rounded-3xl border border-slate-800 shadow-xl space-y-6 text-xs max-w-3xl">
+          <div className="border-b border-slate-800 pb-3">
+            <h3 className="text-sm font-bold text-white font-sans">Client Intake &amp; Booking Status</h3>
+            <p className="text-slate-400">Control active availability badges, project intake slots, and call links.</p>
           </div>
 
-          {/* Toggle Availability */}
-          <div className="flex items-center justify-between p-4 rounded-2xl bg-[#F7FCFA] border border-gray-200">
+          <div className="flex items-center justify-between p-4 bg-[#080B11] rounded-2xl border border-slate-700">
             <div>
-              <span className="font-bold text-[#1F2A37] block">Currently Available for New Projects</span>
-              <span className="text-[11px] text-[#6B7280]">
-                When enabled, clients see a green availability signal in the contact drawer.
-              </span>
+              <span className="font-bold text-white block">Currently Accepting Projects</span>
+              <span className="text-slate-400 text-[11px]">When disabled, an intake waitlist notice is displayed.</span>
             </div>
             <label className="relative inline-flex items-center cursor-pointer">
               <input
@@ -428,75 +455,75 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({ onShowToast }) =
                 onChange={(e) => setIsAvailable(e.target.checked)}
                 className="sr-only peer"
               />
-              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#4CC9A7]" />
+              <div className="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#00E599]" />
             </label>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block font-semibold text-[#1F2A37] mb-1">Availability Status Badge</label>
+              <label className="block font-semibold text-slate-300 mb-1">Availability Badge Text</label>
               <input
                 type="text"
                 value={availabilityBadge}
                 onChange={(e) => setAvailabilityBadge(e.target.value)}
-                placeholder="e.g. Available for Q2 Projects"
-                className="w-full px-3 py-2 rounded-xl border border-gray-200 outline-none focus:border-[#4CC9A7]"
+                placeholder="Available for Q2 & Q3 Projects"
+                className="w-full px-3 py-2.5 rounded-xl bg-[#080B11] border border-slate-700 text-white outline-none focus:border-[#00E599]"
               />
             </div>
 
             <div>
-              <label className="block font-semibold text-[#1F2A37] mb-1">Badge Color</label>
+              <label className="block font-semibold text-slate-300 mb-1">Badge Accent Color</label>
               <select
                 value={badgeColor}
-                onChange={(e) => setBadgeColor(e.target.value as typeof badgeColor)}
-                className="w-full px-3 py-2 rounded-xl border border-gray-200 outline-none bg-white font-medium"
+                onChange={(e) => setBadgeColor(e.target.value as any)}
+                className="w-full px-3 py-2.5 rounded-xl bg-[#080B11] border border-slate-700 text-white outline-none focus:border-[#00E599]"
               >
-                <option value="teal">Teal (Available)</option>
-                <option value="coral">Coral (Select Slots)</option>
-                <option value="amber">Amber (Waitlist)</option>
+                <option value="teal">Cyber Emerald (Active / Green)</option>
+                <option value="coral">Electric Coral (Urgent / Orange)</option>
+                <option value="amber">Warm Amber (Selective / Yellow)</option>
               </select>
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block font-semibold text-[#1F2A37] mb-1">Next Available Intake Slot</label>
+              <label className="block font-semibold text-slate-300 mb-1">Earliest Sprint Slot</label>
               <input
                 type="text"
                 value={nextSlot}
                 onChange={(e) => setNextSlot(e.target.value)}
-                placeholder="e.g. April 2024 / Immediate"
-                className="w-full px-3 py-2 rounded-xl border border-gray-200 outline-none focus:border-[#4CC9A7]"
+                placeholder="Immediate / This Week"
+                className="w-full px-3 py-2.5 rounded-xl bg-[#080B11] border border-slate-700 text-white outline-none focus:border-[#00E599]"
               />
             </div>
 
             <div>
-              <label className="block font-semibold text-[#1F2A37] mb-1">Minimum Project Budget</label>
+              <label className="block font-semibold text-slate-300 mb-1">Minimum Project Scope</label>
               <input
                 type="text"
                 value={minBudget}
                 onChange={(e) => setMinBudget(e.target.value)}
-                placeholder="$2,500"
-                className="w-full px-3 py-2 rounded-xl border border-gray-200 outline-none focus:border-[#4CC9A7]"
+                placeholder="₹25,000"
+                className="w-full px-3 py-2.5 rounded-xl bg-[#080B11] border border-slate-700 text-white outline-none focus:border-[#00E599]"
               />
             </div>
           </div>
 
           <div>
-            <label className="block font-semibold text-[#1F2A37] mb-1">Calendly / Meeting Booking Link</label>
+            <label className="block font-semibold text-slate-300 mb-1">Calendly / Discovery Meeting URL</label>
             <input
               type="url"
               value={calendlyUrl}
               onChange={(e) => setCalendlyUrl(e.target.value)}
-              placeholder="https://calendly.com/your-username"
-              className="w-full px-3 py-2 rounded-xl border border-gray-200 outline-none focus:border-[#4CC9A7]"
+              placeholder="https://calendly.com/nexo-studio"
+              className="w-full px-3 py-2.5 rounded-xl bg-[#080B11] border border-slate-700 text-white outline-none focus:border-[#00E599]"
             />
           </div>
 
-          <div className="pt-3 border-t border-gray-100 flex justify-end">
+          <div className="pt-3 border-t border-slate-800 flex justify-end">
             <button
               type="submit"
-              className="bg-[#4CC9A7] hover:bg-[#37B294] text-white text-xs font-semibold px-6 py-2.5 rounded-full transition-all shadow-xs cursor-pointer"
+              className="bg-[#00E599] hover:bg-[#00B377] text-black font-extrabold text-xs px-6 py-2.5 rounded-full transition-all shadow-[0_0_15px_rgba(0,229,153,0.3)] cursor-pointer"
             >
               Save Availability Settings
             </button>
@@ -506,290 +533,185 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({ onShowToast }) =
 
       {/* TAB 3: SECURITY & ACCESS */}
       {activeTab === 'security' && (
-        <div className="space-y-6 max-w-3xl">
-          <form onSubmit={handlePasswordChange} className="bg-white p-6 rounded-3xl border border-[#E8F7F2] shadow-sm space-y-5 text-xs">
-            <div className="border-b border-gray-100 pb-3 flex items-center justify-between">
-              <div>
-                <h3 className="text-sm font-bold text-[#1F2A37] flex items-center gap-1.5">
-                  <Lock className="w-4 h-4 text-[#4CC9A7]" />
-                  <span>Admin Credentials &amp; Access Controls</span>
-                </h3>
-                <p className="text-[#6B7280]">
-                  Change your admin email and password anytime. Leave password blank if you only want to change your login email.
-                </p>
-              </div>
+        <form onSubmit={handlePasswordChange} className="bg-[#0F1522] p-6 rounded-3xl border border-slate-800 shadow-xl space-y-6 text-xs max-w-3xl">
+          <div className="border-b border-slate-800 pb-3">
+            <h3 className="text-sm font-bold text-white font-sans">Admin Authentication &amp; Credentials</h3>
+            <p className="text-slate-400">Set the master email and password for managing the NEXO Studio portfolio.</p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block font-semibold text-slate-300 mb-1">Admin Display Name *</label>
+              <input
+                type="text"
+                required
+                value={adminName}
+                onChange={(e) => setAdminName(e.target.value)}
+                className="w-full px-3 py-2.5 rounded-xl bg-[#080B11] border border-slate-700 text-white outline-none focus:border-[#00E599]"
+              />
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block font-semibold text-[#1F2A37] mb-1">Admin Display Name</label>
-                <input
-                  type="text"
-                  required
-                  value={adminName}
-                  onChange={(e) => setAdminName(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl border border-gray-200 outline-none focus:border-[#4CC9A7]"
-                />
-              </div>
-
-              <div>
-                <label className="block font-semibold text-[#1F2A37] mb-1">Admin Login Email</label>
-                <input
-                  type="email"
-                  required
-                  value={adminEmail}
-                  onChange={(e) => setAdminEmail(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl border border-gray-200 outline-none focus:border-[#4CC9A7]"
-                />
-              </div>
+            <div>
+              <label className="block font-semibold text-slate-300 mb-1">Admin Login Email *</label>
+              <input
+                type="email"
+                required
+                value={adminEmail}
+                onChange={(e) => setAdminEmail(e.target.value)}
+                className="w-full px-3 py-2.5 rounded-xl bg-[#080B11] border border-slate-700 text-white outline-none focus:border-[#00E599]"
+              />
             </div>
+          </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+          <div className="p-4 bg-[#080B11] rounded-2xl border border-slate-800 space-y-3">
+            <h4 className="font-bold text-white flex items-center gap-1.5">
+              <Key className="w-3.5 h-3.5 text-[#00E599]" />
+              <span>Change Admin Master Password</span>
+            </h4>
+            <p className="text-[11px] text-slate-400">
+              Leave blank if you do not want to alter your current password.
+            </p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
               <div>
-                <label className="block font-semibold text-[#1F2A37] mb-1">Current Password</label>
-                <input
-                  type="password"
-                  value={currentPassword}
-                  onChange={(e) => setCurrentPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="w-full px-3 py-2 rounded-xl border border-gray-200 outline-none focus:border-[#4CC9A7]"
-                />
-              </div>
-              <div>
-                <label className="block font-semibold text-[#1F2A37] mb-1">New Password</label>
+                <label className="block font-medium text-slate-300 mb-1">New Password</label>
                 <input
                   type="password"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
-                  placeholder="Min 6 characters"
-                  className="w-full px-3 py-2 rounded-xl border border-gray-200 outline-none focus:border-[#4CC9A7]"
+                  placeholder="Minimum 6 characters"
+                  className="w-full px-3 py-2 rounded-xl bg-[#0F1522] border border-slate-700 text-white outline-none focus:border-[#00E599]"
                 />
               </div>
+
               <div>
-                <label className="block font-semibold text-[#1F2A37] mb-1">Confirm New Password</label>
+                <label className="block font-medium text-slate-300 mb-1">Confirm New Password</label>
                 <input
                   type="password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="Repeat new password"
-                  className="w-full px-3 py-2 rounded-xl border border-gray-200 outline-none focus:border-[#4CC9A7]"
+                  className="w-full px-3 py-2 rounded-xl bg-[#0F1522] border border-slate-700 text-white outline-none focus:border-[#00E599]"
                 />
               </div>
             </div>
+          </div>
 
-            {/* Session Timeout & Honeypot */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="flex items-center justify-between p-3.5 bg-[#080B11] rounded-2xl border border-slate-800">
               <div>
-                <label className="block font-semibold text-[#1F2A37] mb-1">Session Inactivity Timeout</label>
-                <select
-                  value={sessionTimeoutDays}
-                  onChange={(e) => setSessionTimeoutDays(Number(e.target.value))}
-                  className="w-full px-3 py-2 rounded-xl border border-gray-200 outline-none bg-white font-medium"
-                >
-                  <option value={1}>1 Day</option>
-                  <option value={7}>7 Days (Recommended)</option>
-                  <option value={14}>14 Days</option>
-                  <option value={30}>30 Days</option>
-                </select>
+                <span className="font-bold text-white block">Two-Factor Authentication (2FA)</span>
+                <span className="text-slate-400 text-[11px]">Require authenticator code on sign-in</span>
               </div>
+              <button
+                type="button"
+                onClick={() => setShowQrModal(true)}
+                className="px-3 py-1.5 rounded-full border border-[#00E599]/40 bg-[#00E599]/15 text-[#00E599] font-bold text-[11px] hover:bg-[#00E599]/25 cursor-pointer"
+              >
+                Configure
+              </button>
+            </div>
 
-              <div className="flex items-center justify-between p-3 rounded-xl bg-gray-50 border border-gray-200">
-                <div>
-                  <span className="font-bold text-[#1F2A37] block">Strict Honeypot Defense</span>
-                  <span className="text-[10px] text-[#6B7280]">Blocks automated bots &amp; spam payloads</span>
-                </div>
+            <div className="flex items-center justify-between p-3.5 bg-[#080B11] rounded-2xl border border-slate-800">
+              <div>
+                <span className="font-bold text-white block">Spam Bot Honeypot</span>
+                <span className="text-slate-400 text-[11px]">Strict trap for malicious automated inquiries</span>
+              </div>
+              <label className="relative inline-flex items-center cursor-pointer">
                 <input
                   type="checkbox"
                   checked={honeypotStrict}
                   onChange={(e) => setHoneypotStrict(e.target.checked)}
-                  className="rounded text-[#4CC9A7]"
+                  className="sr-only peer"
                 />
-              </div>
-            </div>
-
-            {/* 2FA Simulator */}
-            <div className="p-4 rounded-2xl bg-[#E8F7F2]/40 border border-[#4CC9A7]/40 flex items-center justify-between">
-              <div>
-                <span className="font-bold text-[#1F2A37] flex items-center gap-1.5">
-                  <Key className="w-3.5 h-3.5 text-[#37B294]" />
-                  <span>Two-Factor Authentication (2FA)</span>
-                </span>
-                <span className="text-[11px] text-[#6B7280]">
-                  Protect admin sign-in with Google Authenticator or 1Password.
-                </span>
-              </div>
-              <div className="flex items-center gap-3">
-                <button
-                  type="button"
-                  onClick={() => setShowQrModal(true)}
-                  className="px-3 py-1 rounded-full border border-[#4CC9A7] text-[#37B294] font-semibold hover:bg-white text-xs cursor-pointer flex items-center gap-1"
-                >
-                  <QrCode className="w-3.5 h-3.5" />
-                  <span>View QR Key</span>
-                </button>
-                <input
-                  type="checkbox"
-                  checked={twoFactorEnabled}
-                  onChange={(e) => {
-                    setTwoFactorEnabled(e.target.checked);
-                    onShowToast('2FA Status', e.target.checked ? '2FA Enabled' : '2FA Disabled');
-                  }}
-                  className="rounded text-[#4CC9A7]"
-                />
-              </div>
-            </div>
-
-            <div className="pt-3 border-t border-gray-100 flex justify-end">
-              <button
-                type="submit"
-                className="bg-[#4CC9A7] hover:bg-[#37B294] text-white text-xs font-semibold px-6 py-2.5 rounded-full transition-all shadow-xs cursor-pointer"
-              >
-                Update Credentials &amp; Security Settings
-              </button>
-            </div>
-          </form>
-
-          {/* Security Audit Log */}
-          <div className="bg-white p-6 rounded-3xl border border-[#E8F7F2] shadow-sm space-y-3 text-xs">
-            <div className="flex items-center justify-between border-b border-gray-100 pb-2">
-              <h3 className="font-bold text-[#1F2A37] flex items-center gap-1.5">
-                <Clock className="w-4 h-4 text-[#4CC9A7]" />
-                <span>Admin Activity &amp; Audit Trail</span>
-              </h3>
-              <span className="text-[11px] text-[#9CA3AF]">{auditLogs.length} Events Logged</span>
-            </div>
-
-            <div className="space-y-2">
-              {auditLogs.map((log) => (
-                <div
-                  key={log.id}
-                  className="p-2.5 rounded-xl bg-[#F7FCFA] border border-gray-100 flex items-center justify-between"
-                >
-                  <div>
-                    <span className="font-bold text-[#1F2A37]">{log.action}: </span>
-                    <span className="text-[#6B7280]">{log.details}</span>
-                  </div>
-                  <div className="text-[10px] text-[#9CA3AF] text-right flex-shrink-0 ml-3">
-                    <div>{log.timestamp}</div>
-                    <div>{log.user}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* TAB 4: NOTIFICATIONS & WEBHOOKS */}
-      {activeTab === 'notifications' && (
-        <form onSubmit={handleSaveNotifications} className="bg-white p-6 rounded-3xl border border-[#E8F7F2] shadow-sm space-y-6 text-xs max-w-3xl">
-          <div className="border-b border-gray-100 pb-3">
-            <h3 className="text-sm font-bold text-[#1F2A37]">Inquiry Alerts &amp; Auto-Responders</h3>
-            <p className="text-[#6B7280]">Configure instant lead dispatches and automated email acknowledgement.</p>
-          </div>
-
-          <div className="flex items-center justify-between p-4 rounded-2xl bg-[#F7FCFA] border border-gray-200">
-            <div>
-              <span className="font-bold text-[#1F2A37] block">Email Notifications on New Inquiries</span>
-              <span className="text-[11px] text-[#6B7280]">
-                Dispatches a formatted summary to your admin email whenever a visitor submits the contact form.
-              </span>
-            </div>
-            <input
-              type="checkbox"
-              checked={emailNotifications}
-              onChange={(e) => setEmailNotifications(e.target.checked)}
-              className="rounded text-[#4CC9A7]"
-            />
-          </div>
-
-          {/* Auto-Reply Template */}
-          <div className="p-4 rounded-2xl border border-gray-200 space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="font-bold text-[#1F2A37]">Client Automated Acknowledgement Email</span>
-              <input
-                type="checkbox"
-                checked={autoReplyEnabled}
-                onChange={(e) => setAutoReplyEnabled(e.target.checked)}
-                className="rounded text-[#4CC9A7]"
-              />
-            </div>
-
-            <div>
-              <label className="block font-semibold text-[#1F2A37] mb-1">Auto-reply Subject Line</label>
-              <input
-                type="text"
-                value={autoReplySubject}
-                onChange={(e) => setAutoReplySubject(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl border border-gray-200 outline-none focus:border-[#4CC9A7]"
-              />
-            </div>
-
-            <div>
-              <label className="block font-semibold text-[#1F2A37] mb-1">Auto-reply Message Body</label>
-              <textarea
-                rows={4}
-                value={autoReplyMessage}
-                onChange={(e) => setAutoReplyMessage(e.target.value)}
-                className="w-full p-2.5 rounded-xl border border-gray-200 outline-none resize-none focus:border-[#4CC9A7]"
-              />
+                <div className="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#00E599]" />
+              </label>
             </div>
           </div>
 
-          {/* Webhook URLs */}
-          <div className="space-y-3">
-            <span className="font-bold text-[#1F2A37] block">Instant Chat Webhook Feeds (Optional)</span>
-
-            <div>
-              <label className="block font-semibold text-[#1F2A37] mb-1">Discord Webhook URL</label>
-              <input
-                type="url"
-                value={discordWebhook}
-                onChange={(e) => setDiscordWebhook(e.target.value)}
-                placeholder="https://discord.com/api/webhooks/..."
-                className="w-full px-3 py-2 rounded-xl border border-gray-200 outline-none focus:border-[#4CC9A7]"
-              />
-            </div>
-
-            <div>
-              <label className="block font-semibold text-[#1F2A37] mb-1">Slack Incoming Webhook URL</label>
-              <input
-                type="url"
-                value={slackWebhook}
-                onChange={(e) => setSlackWebhook(e.target.value)}
-                placeholder="https://hooks.slack.com/services/..."
-                className="w-full px-3 py-2 rounded-xl border border-gray-200 outline-none focus:border-[#4CC9A7]"
-              />
-            </div>
-          </div>
-
-          <div className="pt-3 border-t border-gray-100 flex justify-end">
+          <div className="pt-3 border-t border-slate-800 flex justify-end">
             <button
               type="submit"
-              className="bg-[#4CC9A7] hover:bg-[#37B294] text-white text-xs font-semibold px-6 py-2.5 rounded-full transition-all shadow-xs cursor-pointer"
+              className="bg-[#00E599] hover:bg-[#00B377] text-black font-extrabold text-xs px-6 py-2.5 rounded-full transition-all shadow-[0_0_15px_rgba(0,229,153,0.3)] cursor-pointer"
             >
-              Save Notification Preferences
+              Update Security Credentials
             </button>
           </div>
         </form>
       )}
 
-      {/* TAB 5: MAINTENANCE & VISIBILITY */}
-      {activeTab === 'visibility' && (
-        <form onSubmit={handleSaveMaintenance} className="bg-white p-6 rounded-3xl border border-[#E8F7F2] shadow-sm space-y-6 text-xs max-w-3xl">
-          <div className="border-b border-gray-100 pb-3">
-            <h3 className="text-sm font-bold text-[#1F2A37]">Public Site Visibility &amp; Maintenance Mode</h3>
-            <p className="text-[#6B7280]">Toggle maintenance mode and selectively enable/disable portfolio sections.</p>
+      {/* TAB 4: NOTIFICATIONS & WEBHOOKS */}
+      {activeTab === 'notifications' && (
+        <form onSubmit={handleSaveNotifications} className="bg-[#0F1522] p-6 rounded-3xl border border-slate-800 shadow-xl space-y-6 text-xs max-w-3xl">
+          <div className="border-b border-slate-800 pb-3">
+            <h3 className="text-sm font-bold text-white font-sans">Inquiry Alerts &amp; Webhook Relays</h3>
+            <p className="text-slate-400">Connect Discord, Slack, and email notifications for client project inquiries.</p>
           </div>
 
-          {/* Maintenance Mode */}
-          <div className="p-4 rounded-2xl bg-amber-50/70 border border-amber-200 space-y-3">
+          <div className="flex items-center justify-between p-4 bg-[#080B11] rounded-2xl border border-slate-800">
+            <div>
+              <span className="font-bold text-white block">Email Inquiry Dispatch</span>
+              <span className="text-slate-400 text-[11px]">Receive direct email notifications when clients send a project brief</span>
+            </div>
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                checked={emailNotifications}
+                onChange={(e) => setEmailNotifications(e.target.checked)}
+                className="sr-only peer"
+              />
+              <div className="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#00E599]" />
+            </label>
+          </div>
+
+          <div className="space-y-4">
+            <div>
+              <label className="block font-semibold text-slate-300 mb-1">Discord Webhook Channel URL</label>
+              <input
+                type="url"
+                value={discordWebhook}
+                onChange={(e) => setDiscordWebhook(e.target.value)}
+                placeholder="https://discord.com/api/webhooks/..."
+                className="w-full px-3 py-2.5 rounded-xl bg-[#080B11] border border-slate-700 text-white outline-none focus:border-[#00E599]"
+              />
+            </div>
+
+            <div>
+              <label className="block font-semibold text-slate-300 mb-1">Slack Webhook URL</label>
+              <input
+                type="url"
+                value={slackWebhook}
+                onChange={(e) => setSlackWebhook(e.target.value)}
+                placeholder="https://hooks.slack.com/services/..."
+                className="w-full px-3 py-2.5 rounded-xl bg-[#080B11] border border-slate-700 text-white outline-none focus:border-[#00E599]"
+              />
+            </div>
+          </div>
+
+          <div className="pt-3 border-t border-slate-800 flex justify-end">
+            <button
+              type="submit"
+              className="bg-[#00E599] hover:bg-[#00B377] text-black font-extrabold text-xs px-6 py-2.5 rounded-full transition-all shadow-[0_0_15px_rgba(0,229,153,0.3)] cursor-pointer"
+            >
+              Save Notification Webhooks
+            </button>
+          </div>
+        </form>
+      )}
+
+      {/* TAB 5: VISIBILITY & MAINTENANCE */}
+      {activeTab === 'visibility' && (
+        <form onSubmit={handleSaveMaintenance} className="bg-[#0F1522] p-6 rounded-3xl border border-slate-800 shadow-xl space-y-6 text-xs max-w-3xl">
+          <div className="border-b border-slate-800 pb-3">
+            <h3 className="text-sm font-bold text-white font-sans">Maintenance &amp; Section Visibility</h3>
+            <p className="text-slate-400">Toggle site maintenance mode and manage public section displays.</p>
+          </div>
+
+          <div className="p-4 bg-[#080B11] rounded-2xl border border-slate-800 space-y-3">
             <div className="flex items-center justify-between">
               <div>
-                <span className="font-bold text-amber-900 block">Maintenance Mode</span>
-                <span className="text-[11px] text-amber-700">
-                  When active, non-admin visitors see a gentle "Studio Updating" notice screen.
-                </span>
+                <span className="font-bold text-white block">Maintenance Mode</span>
+                <span className="text-slate-400 text-[11px]">Displays maintenance banner for visitors</span>
               </div>
               <label className="relative inline-flex items-center cursor-pointer">
                 <input
@@ -798,301 +720,199 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({ onShowToast }) =
                   onChange={(e) => setMaintenanceMode(e.target.checked)}
                   className="sr-only peer"
                 />
-                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-600" />
+                <div className="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#FF5A36]" />
               </label>
             </div>
 
-            <div>
-              <label className="block font-semibold text-amber-900 mb-1">Maintenance Announcement Text</label>
-              <textarea
-                rows={2}
-                value={maintenanceNotice}
-                onChange={(e) => setMaintenanceNotice(e.target.value)}
-                className="w-full p-2.5 rounded-xl border border-amber-200 outline-none bg-white resize-none"
-              />
-            </div>
+            {maintenanceMode && (
+              <div className="pt-2">
+                <label className="block font-medium text-slate-300 mb-1">Maintenance Banner Copy</label>
+                <textarea
+                  rows={2}
+                  value={maintenanceNotice}
+                  onChange={(e) => setMaintenanceNotice(e.target.value)}
+                  className="w-full px-3 py-2 rounded-xl bg-[#0F1522] border border-slate-700 text-white outline-none focus:border-[#FF5A36] resize-none"
+                />
+              </div>
+            )}
           </div>
 
-          {/* Section Visibility Controls */}
-          <div className="space-y-3">
-            <span className="font-bold text-[#1F2A37] block">Section Visibility Controls</span>
-
-            <div className="flex items-center justify-between p-3 rounded-xl bg-gray-50 border border-gray-200">
-              <div>
-                <span className="font-bold text-[#1F2A37] block">Display Client Testimonials Section</span>
-                <span className="text-[11px] text-[#6B7280]">Show "What Clients Say" recommendations</span>
-              </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="flex items-center justify-between p-3.5 bg-[#080B11] rounded-2xl border border-slate-800">
+              <span className="font-medium text-white">Show Client Testimonials Section</span>
               <input
                 type="checkbox"
                 checked={showTestimonials}
                 onChange={(e) => setShowTestimonials(e.target.checked)}
-                className="rounded text-[#4CC9A7]"
+                className="rounded border-slate-700 text-[#00E599] focus:ring-[#00E599]"
               />
             </div>
 
-            <div className="flex items-center justify-between p-3 rounded-xl bg-gray-50 border border-gray-200">
-              <div>
-                <span className="font-bold text-[#1F2A37] block">Display "My Design Process" Section</span>
-                <span className="text-[11px] text-[#6B7280]">Show 6-step interactive workflow</span>
-              </div>
+            <div className="flex items-center justify-between p-3.5 bg-[#080B11] rounded-2xl border border-slate-800">
+              <span className="font-medium text-white">Show 4-Step Process Section</span>
               <input
                 type="checkbox"
                 checked={showProcess}
                 onChange={(e) => setShowProcess(e.target.checked)}
-                className="rounded text-[#4CC9A7]"
+                className="rounded border-slate-700 text-[#00E599] focus:ring-[#00E599]"
               />
             </div>
           </div>
 
-          <div className="pt-3 border-t border-gray-100 flex justify-end">
+          <div className="pt-3 border-t border-slate-800 flex justify-end">
             <button
               type="submit"
-              className="bg-[#4CC9A7] hover:bg-[#37B294] text-white text-xs font-semibold px-6 py-2.5 rounded-full transition-all shadow-xs cursor-pointer"
+              className="bg-[#00E599] hover:bg-[#00B377] text-black font-extrabold text-xs px-6 py-2.5 rounded-full transition-all shadow-[0_0_15px_rgba(0,229,153,0.3)] cursor-pointer"
             >
-              Save Visibility Settings
+              Update Section Display
             </button>
           </div>
         </form>
       )}
 
-      {/* TAB 6: BACKUP & DANGER ZONE */}
+      {/* TAB 6: BACKUP & DATABASE */}
       {activeTab === 'backup' && (
         <div className="space-y-6 max-w-3xl">
-          {/* Supabase Cloud Database Card */}
-          <div className="bg-white p-6 rounded-3xl border border-[#E8F7F2] shadow-sm space-y-4 text-xs">
-            <div className="border-b border-gray-100 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          {/* Database Health Card */}
+          <div className="bg-[#0F1522] p-6 rounded-3xl border border-slate-800 shadow-xl space-y-4 text-xs">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <div>
-                <h3 className="text-sm font-bold text-[#1F2A37] flex items-center gap-1.5">
-                  <Database className="w-4 h-4 text-[#4CC9A7]" />
-                  <span>Supabase PostgreSQL Cloud Database</span>
+                <h3 className="text-sm font-bold text-white font-sans flex items-center gap-2">
+                  <Database className="w-4 h-4 text-[#00E599]" />
+                  <span>Cloud Database Connectivity</span>
                 </h3>
-                <p className="text-[#6B7280]">
-                  Real-time database connection status, project credentials, and synchronization.
-                </p>
+                <p className="text-slate-400">Live PostgreSQL connection status and cache sync.</p>
               </div>
 
               <div className="flex items-center gap-2">
-                <span
-                  className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold ${
-                    dbStatus.connected
-                      ? 'bg-emerald-100 text-emerald-700'
-                      : 'bg-amber-100 text-amber-700'
-                  }`}
+                <button
+                  type="button"
+                  onClick={handleTestDatabase}
+                  disabled={testingSupabase}
+                  className="px-3.5 py-1.5 rounded-full border border-slate-700 text-slate-300 hover:text-white hover:bg-slate-800 transition-colors flex items-center gap-1.5 font-semibold cursor-pointer"
                 >
-                  <span
-                    className={`w-2 h-2 rounded-full ${
-                      dbStatus.connected ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'
-                    }`}
-                  />
-                  <span>{dbStatus.connected ? 'Online & Synchronized' : 'Connecting...'}</span>
-                </span>
+                  <RefreshCw className={`w-3.5 h-3.5 ${testingSupabase ? 'animate-spin' : ''}`} />
+                  <span>{testingSupabase ? 'Testing...' : 'Test Connection'}</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleSyncDatabase}
+                  disabled={syncingSupabase}
+                  className="px-3.5 py-1.5 rounded-full bg-[#00E599]/15 text-[#00E599] border border-[#00E599]/30 hover:bg-[#00E599]/25 transition-colors flex items-center gap-1.5 font-bold cursor-pointer"
+                >
+                  <Download className="w-3.5 h-3.5" />
+                  <span>{syncingSupabase ? 'Syncing...' : 'Sync Latest'}</span>
+                </button>
               </div>
             </div>
 
-            {/* Connection Details Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div className="p-3 rounded-2xl bg-[#F7FCFA] border border-gray-100 space-y-1">
-                <span className="text-[11px] font-semibold text-[#9CA3AF] block">Project URL</span>
-                <span className="text-xs font-mono font-bold text-[#1F2A37] break-all select-all">
-                  https://tdkdirilyawlaujgtbpo.supabase.co
+            <div className="p-3.5 bg-[#080B11] rounded-2xl border border-slate-800 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#00E599] animate-pulse" />
+                <span className="font-mono text-slate-300">
+                  Instance: {dbStatus.projectRef || 'Production Cloud SQL / Supabase'}
                 </span>
               </div>
-
-              <div className="p-3 rounded-2xl bg-[#F7FCFA] border border-gray-100 space-y-1">
-                <span className="text-[11px] font-semibold text-[#9CA3AF] block">Database Engine</span>
-                <span className="text-xs font-bold text-[#1F2A37] flex items-center gap-1">
-                  <span>PostgreSQL 17 (Direct &amp; REST Active)</span>
-                </span>
-              </div>
-
-              <div className="p-3 rounded-2xl bg-[#F7FCFA] border border-gray-100 space-y-1">
-                <span className="text-[11px] font-semibold text-[#9CA3AF] block">Publishable API Key</span>
-                <span className="text-xs font-mono text-[#37B294] font-semibold truncate block select-all">
-                  sb_publishable_FnoTZUPeOf4yjmjPXF8ltg_5WuRdeY1
-                </span>
-              </div>
-
-              <div className="p-3 rounded-2xl bg-[#F7FCFA] border border-gray-100 space-y-1">
-                <span className="text-[11px] font-semibold text-[#9CA3AF] block">Direct PostgreSQL Host</span>
-                <span className="text-xs font-mono text-[#1F2A37] truncate block select-all">
-                  db.tdkdirilyawlaujgtbpo.supabase.co:5432
-                </span>
-              </div>
-            </div>
-
-            {/* Database Tables Summary */}
-            <div className="p-3 rounded-2xl bg-white border border-gray-200">
-              <span className="text-[11px] font-semibold text-[#6B7280] block mb-1.5">
-                Active Synchronized Tables (12/12):
+              <span className="text-[11px] font-mono text-[#00E599] bg-[#00E599]/10 px-2 py-0.5 rounded-full border border-[#00E599]/20">
+                Connected &amp; Active
               </span>
-              <div className="flex flex-wrap gap-1.5">
-                {[
-                  'profile',
-                  'services',
-                  'categories',
-                  'projects',
-                  'info_chips',
-                  'process_steps',
-                  'testimonials',
-                  'social_profiles',
-                  'messages',
-                  'media',
-                  'seo_settings',
-                  'advanced_settings',
-                ].map((tbl) => (
-                  <span
-                    key={tbl}
-                    className="text-[10px] font-mono bg-[#E8F7F2] text-[#37B294] font-bold px-2 py-0.5 rounded-md"
-                  >
-                    ✓ {tbl}
-                  </span>
-                ))}
-              </div>
             </div>
 
-            {/* Test result message if any */}
             {supabaseTestMsg && (
-              <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-800 font-medium">
+              <div className="p-3 bg-[#080B11] rounded-xl border border-slate-700 text-slate-300 font-mono text-[11px]">
                 {supabaseTestMsg}
               </div>
             )}
-
-            {/* Action Buttons */}
-            <div className="flex flex-wrap items-center gap-3 pt-2">
-              <button
-                type="button"
-                disabled={testingSupabase}
-                onClick={async () => {
-                  setTestingSupabase(true);
-                  const res = await testDatabaseConnection();
-                  setTestingSupabase(false);
-                  setSupabaseTestMsg(
-                    res.ok
-                      ? `✅ ${res.message}`
-                      : `❌ Connection check failed: ${res.message}`
-                  );
-                  onShowToast(
-                    res.ok ? 'Database Connected' : 'Connection Error',
-                    res.ok ? `Supabase response verified (${res.latencyMs}ms)` : res.message
-                  );
-                }}
-                className="inline-flex items-center gap-1.5 bg-[#4CC9A7] hover:bg-[#37B294] text-white font-semibold px-4 py-2 rounded-full transition-all shadow-xs cursor-pointer disabled:opacity-50"
-              >
-                <Radio className={`w-3.5 h-3.5 ${testingSupabase ? 'animate-pulse' : ''}`} />
-                <span>{testingSupabase ? 'Pinging Database...' : 'Test Connection Ping'}</span>
-              </button>
-
-              <button
-                type="button"
-                disabled={syncingSupabase}
-                onClick={async () => {
-                  setSyncingSupabase(true);
-                  const success = await refreshFromDatabase();
-                  setSyncingSupabase(false);
-                  onShowToast(
-                    success ? 'Synced from Supabase' : 'Sync Issue',
-                    success
-                      ? 'All tables and portfolio sections refreshed from live database.'
-                      : 'Could not refresh from Supabase.'
-                  );
-                }}
-                className="inline-flex items-center gap-1.5 bg-white hover:bg-gray-50 border border-gray-300 text-[#1F2A37] font-semibold px-4 py-2 rounded-full transition-all shadow-xs cursor-pointer disabled:opacity-50"
-              >
-                <RefreshCw className={`w-3.5 h-3.5 text-[#37B294] ${syncingSupabase ? 'animate-spin' : ''}`} />
-                <span>{syncingSupabase ? 'Syncing...' : 'Force Sync from Supabase'}</span>
-              </button>
-            </div>
           </div>
 
-          {/* Backup & Restore */}
-          <div className="bg-white p-6 rounded-3xl border border-[#E8F7F2] shadow-sm space-y-4 text-xs">
-            <div className="border-b border-gray-100 pb-3">
-              <h3 className="text-sm font-bold text-[#1F2A37] flex items-center gap-1.5">
-                <Database className="w-4 h-4 text-[#4CC9A7]" />
-                <span>Data Backup &amp; Migration</span>
-              </h3>
-              <p className="text-[#6B7280]">
-                Export your full portfolio database (projects, services, categories, messages, and copy) as a single JSON file.
-              </p>
+          {/* Backup Archives Card */}
+          <div className="bg-[#0F1522] p-6 rounded-3xl border border-slate-800 shadow-xl space-y-4 text-xs">
+            <div className="border-b border-slate-800 pb-3">
+              <h3 className="text-sm font-bold text-white font-sans">Full JSON Portfolio Archive</h3>
+              <p className="text-slate-400">Export or restore your full portfolio state across projects, services, and media.</p>
             </div>
 
-            <div className="p-3 rounded-2xl bg-[#F7FCFA] border border-gray-200 flex items-center justify-between">
-              <div>
-                <span className="font-bold text-[#1F2A37] block">Estimated Storage Footprint</span>
-                <span className="text-[11px] text-[#6B7280]">Database records &amp; media assets</span>
-              </div>
-              <span className="font-mono font-bold text-[#37B294] bg-[#E8F7F2] px-3 py-1 rounded-full text-xs">
-                {advancedSettings.storageUsedMb || 24.6} MB Used
-              </span>
-            </div>
-
-            <div className="flex flex-wrap gap-3 pt-2">
+            <div className="flex flex-wrap items-center gap-3">
               <button
                 type="button"
-                onClick={handleExport}
-                className="inline-flex items-center gap-1.5 bg-[#4CC9A7] hover:bg-[#37B294] text-white font-semibold px-5 py-2.5 rounded-full transition-all shadow-xs cursor-pointer"
+                onClick={handleExportBackup}
+                className="inline-flex items-center gap-2 bg-[#00E599] hover:bg-[#00B377] text-black font-extrabold px-5 py-2.5 rounded-full shadow-[0_0_15px_rgba(0,229,153,0.3)] transition-all cursor-pointer"
               >
                 <Download className="w-4 h-4" />
-                <span>Export JSON Backup</span>
+                <span>Export JSON Backup Archive</span>
               </button>
 
-              <label className="inline-flex items-center gap-1.5 bg-white hover:bg-gray-50 border border-gray-300 text-[#1F2A37] font-semibold px-5 py-2.5 rounded-full transition-all shadow-xs cursor-pointer">
-                <Upload className="w-4 h-4 text-[#4CC9A7]" />
-                <span>Import JSON Backup</span>
-                <input
-                  type="file"
-                  accept=".json,application/json"
-                  onChange={handleImport}
-                  className="hidden"
-                />
-              </label>
+              <input
+                type="file"
+                ref={fileInputRef}
+                accept=".json"
+                className="hidden"
+                onChange={handleImportFile}
+              />
+
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="inline-flex items-center gap-2 border border-slate-700 hover:border-slate-500 bg-[#080B11] text-slate-200 font-semibold px-5 py-2.5 rounded-full transition-all cursor-pointer"
+              >
+                <Upload className="w-4 h-4 text-[#00E599]" />
+                <span>Restore from JSON File</span>
+              </button>
             </div>
           </div>
 
-          {/* Danger Zone */}
-          <div className="bg-red-50/50 p-6 rounded-3xl border border-red-200 shadow-sm space-y-3 text-xs">
-            <div className="flex items-center gap-2 text-red-700">
-              <AlertTriangle className="w-4 h-4" />
-              <h3 className="font-bold uppercase tracking-wider">Danger Zone</h3>
+          {/* Danger Zone Card */}
+          <div className="bg-[#0F1522] p-6 rounded-3xl border border-red-900/60 shadow-xl space-y-4 text-xs">
+            <div className="flex items-center gap-3 border-b border-red-950/80 pb-3">
+              <div className="w-8 h-8 rounded-xl bg-red-950/60 text-red-400 flex items-center justify-center border border-red-800/60">
+                <AlertTriangle className="w-4 h-4" />
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-white font-sans">Danger Zone</h3>
+                <p className="text-slate-400">Restore factory reference defaults across all studio data.</p>
+              </div>
             </div>
-            <p className="text-red-600">
-              Restore all projects, copy, bio, and settings back to the original mint &amp; coral reference state.
+
+            <p className="text-slate-300 leading-relaxed">
+              Resetting will clear custom modifications and re-populate the original pristine portfolio state.
             </p>
+
             <button
               type="button"
-              onClick={handleReset}
-              className="inline-flex items-center gap-1.5 bg-red-600 hover:bg-red-700 text-white font-semibold px-5 py-2.5 rounded-full transition-all shadow-xs cursor-pointer"
+              onClick={() => setResetModalOpen(true)}
+              className="px-5 py-2.5 rounded-full bg-red-950/60 hover:bg-red-900/80 text-red-400 border border-red-800/80 font-bold transition-all cursor-pointer"
             >
-              <RotateCcw className="w-3.5 h-3.5" />
-              <span>Reset to Factory Defaults</span>
+              Reset to Studio Factory Defaults
             </button>
           </div>
         </div>
       )}
 
-      {/* 2FA QR Code Modal */}
+      {/* 2FA Authenticator Modal */}
       {showQrModal && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl border border-gray-200">
-            <h3 className="text-base font-bold text-[#1F2A37]">Two-Factor Authenticator Setup</h3>
-            <p className="text-xs text-[#6B7280]">
-              Scan this QR code with Google Authenticator or 1Password to set up two-factor verification.
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-[#0F1522] rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-slate-700 text-white text-center">
+            <div className="w-12 h-12 rounded-2xl bg-[#00E599]/15 text-[#00E599] border border-[#00E599]/30 flex items-center justify-center mx-auto mb-3">
+              <QrCode className="w-6 h-6" />
+            </div>
+            <h3 className="text-base font-bold text-white mb-1">Two-Factor Authentication</h3>
+            <p className="text-xs text-slate-400 mb-4">
+              Scan with Google Authenticator or 1Password to activate 2FA protection.
             </p>
 
-            <div className="p-4 bg-gray-50 border border-gray-200 rounded-2xl inline-block mx-auto">
-              <div className="w-40 h-40 bg-white border border-gray-300 rounded-xl flex items-center justify-center font-mono text-xs text-gray-400">
-                [QR Code Matrix]
-              </div>
+            <div className="p-4 bg-white rounded-2xl inline-block mb-4">
+              <QrCode className="w-36 h-36 text-black" />
             </div>
 
-            <div className="bg-gray-100 p-2.5 rounded-xl font-mono text-[11px] text-gray-700 select-all">
-              ASHH-AR99-UIUX-2024-AUTH
-            </div>
+            <p className="text-[11px] font-mono text-[#00E599] bg-[#080B11] p-2 rounded-xl border border-slate-800 mb-4">
+              NEXO-STUDIO-AUTH-2024
+            </p>
 
             <button
               type="button"
               onClick={() => setShowQrModal(false)}
-              className="w-full bg-[#4CC9A7] hover:bg-[#37B294] text-white text-xs font-semibold py-2.5 rounded-full"
+              className="w-full py-2.5 rounded-full bg-[#00E599] hover:bg-[#00B377] text-black font-extrabold text-xs cursor-pointer"
             >
               Done
             </button>
@@ -1100,14 +920,14 @@ export const SettingsModule: React.FC<SettingsModuleProps> = ({ onShowToast }) =
         </div>
       )}
 
-      {/* FACTORY RESET CONFIRMATION MODAL */}
+      {/* Reset Confirmation Modal */}
       <ConfirmDeleteModal
-        isOpen={resetConfirmationOpen}
-        title="Reset All Sections to Factory Defaults?"
-        message="This will overwrite current edits across projects, services, profile copy, testimonials, and settings with the pristine reference defaults. This cannot be undone."
-        confirmLabel="Reset All Content"
-        onConfirm={handleExecuteReset}
-        onClose={() => setResetConfirmationOpen(false)}
+        isOpen={resetModalOpen}
+        title="Reset Portfolio to Factory Defaults?"
+        message="This will overwrite all current edits across projects, services, profile copy, testimonials, and settings with pristine reference defaults. This cannot be undone."
+        confirmText="Yes, Reset Everything"
+        onConfirm={handleConfirmResetDefaults}
+        onCancel={() => setResetModalOpen(false)}
       />
     </div>
   );

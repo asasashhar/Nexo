@@ -3,6 +3,7 @@ import {
   PortfolioProfile,
   InfoChip,
   ServiceItem,
+  WhyChooseItem,
   Project,
   ProcessStep,
   Testimonial,
@@ -20,6 +21,7 @@ import {
 import {
   INITIAL_PROFILE,
   INITIAL_INFO_CHIPS,
+  INITIAL_WHY_CHOOSE,
   INITIAL_SERVICES,
   INITIAL_CATEGORIES,
   INITIAL_PROJECTS,
@@ -45,8 +47,12 @@ interface DbStatus {
 interface PortfolioContextType {
   profile: PortfolioProfile;
   setProfile: (p: PortfolioProfile) => void;
+  updateHeroImage: (url: string) => void;
+  updateAboutImage: (url: string) => void;
   infoChips: InfoChip[];
   setInfoChips: (chips: InfoChip[]) => void;
+  whyChooseItems: WhyChooseItem[];
+  setWhyChooseItems: (items: WhyChooseItem[]) => void;
   services: ServiceItem[];
   setServices: (s: ServiceItem[]) => void;
   categories: WorkCategory[];
@@ -116,6 +122,11 @@ interface PortfolioContextType {
   updateInfoChip: (chip: InfoChip) => void;
   deleteInfoChip: (id: string) => Promise<boolean> | void;
 
+  // Why Choose NEXO CRUD
+  addWhyChooseItem: (item: WhyChooseItem) => void;
+  updateWhyChooseItem: (item: WhyChooseItem) => void;
+  deleteWhyChooseItem: (id: string) => Promise<boolean> | void;
+
   // Advanced Message Operations
   addMessage: (
     msg: Omit<
@@ -170,6 +181,9 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   );
   const [infoChips, setInfoChipsState] = useState<InfoChip[]>(() =>
     loadFromStorage('infoChips', INITIAL_INFO_CHIPS)
+  );
+  const [whyChooseItems, setWhyChooseItemsState] = useState<WhyChooseItem[]>(() =>
+    loadFromStorage('whyChooseItems', INITIAL_WHY_CHOOSE)
   );
   const [services, setServicesState] = useState<ServiceItem[]>(() =>
     loadFromStorage('services', INITIAL_SERVICES)
@@ -597,9 +611,24 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       });
   };
 
+  const updateHeroImage = (newUrl: string) => {
+    const updated = { ...profile, heroImageUrl: newUrl };
+    setProfile(updated);
+  };
+
+  const updateAboutImage = (newUrl: string) => {
+    const updated = { ...profile, aboutImageUrl: newUrl };
+    setProfile(updated);
+  };
+
   const setInfoChips = (c: InfoChip[]) => {
     setInfoChipsState(c);
     saveToStorage('infoChips', c);
+  };
+
+  const setWhyChooseItems = (items: WhyChooseItem[]) => {
+    setWhyChooseItemsState(items);
+    saveToStorage('whyChooseItems', items);
   };
 
   const setServices = (s: ServiceItem[]) => {
@@ -1254,6 +1283,22 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     }
   };
 
+  // Why Choose NEXO CRUD
+  const addWhyChooseItem = (item: WhyChooseItem) => {
+    const updated = [...whyChooseItems, item];
+    setWhyChooseItems(updated);
+  };
+
+  const updateWhyChooseItem = (item: WhyChooseItem) => {
+    const updated = whyChooseItems.map((w) => (w.id === item.id ? item : w));
+    setWhyChooseItems(updated);
+  };
+
+  const deleteWhyChooseItem = (id: string) => {
+    const updated = whyChooseItems.filter((w) => w.id !== id);
+    setWhyChooseItems(updated);
+  };
+
   // Advanced Messages
   const addMessage = async (
     msgData: Omit<
@@ -1515,6 +1560,7 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const resetAllDefaults = () => {
     setProfile(INITIAL_PROFILE);
     setInfoChips(INITIAL_INFO_CHIPS);
+    setWhyChooseItems(INITIAL_WHY_CHOOSE);
     setServices(INITIAL_SERVICES);
     setCategories(INITIAL_CATEGORIES);
     setProjects(INITIAL_PROJECTS);
@@ -1532,6 +1578,7 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     const payload = {
       profile,
       infoChips,
+      whyChooseItems,
       services,
       categories,
       projects,
@@ -1552,6 +1599,7 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       const data = JSON.parse(jsonString);
       if (data.profile) setProfile(data.profile);
       if (data.infoChips) setInfoChips(data.infoChips);
+      if (data.whyChooseItems) setWhyChooseItems(data.whyChooseItems);
       if (data.services) setServices(data.services);
       if (data.categories) setCategories(data.categories);
       if (data.projects) setProjects(data.projects);
@@ -1574,8 +1622,15 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       value={{
         profile,
         setProfile,
+        updateHeroImage,
+        updateAboutImage,
         infoChips,
         setInfoChips,
+        whyChooseItems,
+        setWhyChooseItems,
+        addWhyChooseItem,
+        updateWhyChooseItem,
+        deleteWhyChooseItem,
         services,
         setServices,
         categories,

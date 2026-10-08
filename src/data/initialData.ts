@@ -5,6 +5,7 @@ import {
   InquiryMessage,
   InfoChip,
   ServiceItem,
+  WhyChooseItem,
   ProcessStep,
   SocialProfile,
   SeoSettings,
@@ -51,10 +52,81 @@ export const INITIAL_PROFILE: PortfolioProfile = {
   "processSubtitle": "A clear and collaborative approach from idea to impact.",
   "ctaHeadline": "Let's create something amazing",
   "ctaHighlightedWord": "together!",
-  "ctaSubtext": "Have a project in mind or just want to say hi? I'd love to hear from you."
+  "ctaSubtext": "Have a project in mind or just want to say hi? I'd love to hear from you.",
+  "whyChooseBadge": "WHY CHOOSE NEXO?",
+  "whyChooseTitle": "Precision Engineering Meets Artistic Excellence",
+  "whyChooseSubtitle": "Everything your brand needs to command attention, outshine competitors, and drive measurable growth across digital platforms."
 };
 
 export const INITIAL_SERVICES: ServiceItem[] = [
+  {
+    "id": "service-3",
+    "title": "Web Design",
+    "desc": "Modern, responsive and user-friendly websites that represent your brand perfectly and convert visitors.",
+    "details": "Custom Responsive Web, Clean UI/UX Architecture, SEO & Speed Optimizations, Desktop & Mobile Breakpoints",
+    "iconName": "Monitor",
+    "frontImage": "",
+    "published": true,
+    "order": 1,
+    "estimatedTimeline": "2-3 weeks",
+    "deliverablesList": [
+      "Custom Responsive Web",
+      "Clean UI/UX Architecture",
+      "SEO & Speed Optimizations",
+      "Desktop & Mobile Breakpoints"
+    ]
+  },
+  {
+    "id": "service-6",
+    "title": "Poster Making",
+    "desc": "Eye-catching, bold posters for branding, music events, schools, campaigns, and creative businesses.",
+    "details": "High-Res Print CMYK, Digital Campaign Art, Custom Typography & Vectors, Outdoor Billboard Mockups",
+    "iconName": "Palette",
+    "frontImage": "",
+    "published": true,
+    "order": 2,
+    "estimatedTimeline": "3-7 days",
+    "deliverablesList": [
+      "High-Res Print CMYK",
+      "Digital Campaign Art",
+      "Custom Typography & Vectors",
+      "Outdoor Billboard Mockups"
+    ]
+  },
+  {
+    "id": "service-8",
+    "title": "Ads Creation",
+    "desc": "Engaging paid social media ads, reels, and digital campaigns that get measurable results and high CTR.",
+    "details": "9:16 Vertical Video Reels, Multi-Platform Ad Units, Dynamic Kinetic Motion, Hook & CTA Optimizations",
+    "iconName": "Megaphone",
+    "frontImage": "",
+    "published": true,
+    "order": 3,
+    "estimatedTimeline": "1-2 weeks",
+    "deliverablesList": [
+      "9:16 Vertical Video Reels",
+      "Multi-Platform Ad Units",
+      "Dynamic Kinetic Motion",
+      "Hook & CTA Optimizations"
+    ]
+  },
+  {
+    "id": "service-7",
+    "title": "Product Poster",
+    "desc": "Showcase your products with clean, attractive and professional studio rendering aesthetics.",
+    "details": "Studio 3D Renders, Hardware Spec Callouts, Commercial Key Visuals, Packaging Artwork Overlays",
+    "iconName": "Box",
+    "frontImage": "",
+    "published": true,
+    "order": 4,
+    "estimatedTimeline": "1-2 weeks",
+    "deliverablesList": [
+      "Studio 3D Renders",
+      "Hardware Spec Callouts",
+      "Commercial Key Visuals",
+      "Packaging Artwork Overlays"
+    ]
+  },
   {
     "id": "service-1",
     "title": "UI/UX Design",
@@ -63,7 +135,7 @@ export const INITIAL_SERVICES: ServiceItem[] = [
     "iconName": "PenTool",
     "frontImage": "",
     "published": true,
-    "order": 1,
+    "order": 5,
     "estimatedTimeline": "2-4 weeks",
     "deliverablesList": [
       "Figma Design System",
@@ -80,81 +152,13 @@ export const INITIAL_SERVICES: ServiceItem[] = [
     "iconName": "Smartphone",
     "frontImage": "",
     "published": true,
-    "order": 2,
+    "order": 6,
     "estimatedTimeline": "3-5 weeks",
     "deliverablesList": [
       "iOS & Android Screen Flows",
       "Micro-interactions",
       "Dark & Light Themes",
       "Developer Handoff Kit"
-    ]
-  },
-  {
-    "id": "service-3",
-    "title": "Web Design",
-    "desc": "Creating modern, responsive websites that are fast, accessible and user-friendly.",
-    "details": "Responsive web experiences, marketing landing pages, and web apps optimized for conversion, SEO structure, and cross-browser performance.",
-    "iconName": "Monitor",
-    "frontImage": "",
-    "published": true,
-    "order": 3,
-    "estimatedTimeline": "2-3 weeks",
-    "deliverablesList": [
-      "Desktop & Mobile Breakpoints",
-      "Tailwind/Figma Tokens",
-      "Conversion Funnel Layouts",
-      "Skeletal States"
-    ]
-  },
-  {
-    "id": "service-6",
-    "title": "Posters",
-    "desc": "Creating bold, iconic posters for branding, music events, and creative campaigns.",
-    "details": "High-impact graphic compositions blending typography, custom vector graphics, and color theory for both digital showcases and premium print formats.",
-    "iconName": "Image",
-    "frontImage": "",
-    "published": true,
-    "order": 6,
-    "estimatedTimeline": "3-7 days",
-    "deliverablesList": [
-      "300 DPI Print-Ready CMYK",
-      "High-Res Digital Vectors",
-      "Outdoor Billboard Mockups",
-      "Social Teaser Crops"
-    ]
-  },
-  {
-    "id": "service-7",
-    "title": "Product Poster",
-    "desc": "Showcasing physical hardware, lifestyle products, and packaging with dramatic visual hierarchy.",
-    "details": "Stunning commercial product spotlights featuring realistic lighting, exploded-view schematics, key feature callouts, and clean studio rendering aesthetics.",
-    "iconName": "Sparkles",
-    "frontImage": "",
-    "published": true,
-    "order": 7,
-    "estimatedTimeline": "1-2 weeks",
-    "deliverablesList": [
-      "Commercial Key Visuals",
-      "Spec Sheet Layouts",
-      "Ecommerce Hero Banners",
-      "Packaging Artwork Overlays"
-    ]
-  },
-  {
-    "id": "service-8",
-    "title": "Ads (Video & Image)",
-    "desc": "Designing high-conversion creative ads across paid social, reels, motion shorts, and display networks.",
-    "details": "Dynamic multi-format digital advertising assets including static carousel banners and animated kinetic video ads engineered for maximum CTR and ROAS.",
-    "iconName": "Film",
-    "frontImage": "",
-    "published": true,
-    "order": 8,
-    "estimatedTimeline": "1-2 weeks",
-    "deliverablesList": [
-      "15s / 30s Motion Video Ads (9:16 & 1:1)",
-      "Story & Feed Static Banners",
-      "A/B Test Creative Variations",
-      "Hook & CTA Optimizations"
     ]
   }
 ];
@@ -415,6 +419,41 @@ export const INITIAL_PROJECTS: Project[] = [
   }
 ];
 
+export const INITIAL_WHY_CHOOSE: WhyChooseItem[] = [
+  {
+    "id": "why-1",
+    "title": "Creative Mindset",
+    "desc": "Fresh ideas for unique results.",
+    "iconName": "Lightbulb",
+    "color": "#00E599",
+    "order": 1
+  },
+  {
+    "id": "why-2",
+    "title": "Fast Delivery",
+    "desc": "On time, every time.",
+    "iconName": "Zap",
+    "color": "#FF5A36",
+    "order": 2
+  },
+  {
+    "id": "why-3",
+    "title": "Quality Designs",
+    "desc": "Pixel perfect and professional.",
+    "iconName": "ShieldCheck",
+    "color": "#06B6D4",
+    "order": 3
+  },
+  {
+    "id": "why-4",
+    "title": "Client Focus",
+    "desc": "Your success is our priority.",
+    "iconName": "Users",
+    "color": "#A855F7",
+    "order": 4
+  }
+];
+
 export const INITIAL_INFO_CHIPS: InfoChip[] = [
   {
     "id": "chip-1",
@@ -628,7 +667,7 @@ export const INITIAL_INQUIRIES: InquiryMessage[] = [
     "email": "david@soundwave.io",
     "subject": "Product Posters & Video Ad Campaign",
     "service": "Ads (Video & Image)",
-    "budget": "$3,000 - $5,000",
+    "budget": "₹35,000 - ₹75,000",
     "message": "We are launching new noise-cancelling earbuds and need 3 product posters plus a 15s kinetic video ad for TikTok.",
     "read": true,
     "starred": true,
@@ -658,7 +697,7 @@ export const INITIAL_INQUIRIES: InquiryMessage[] = [
     "email": "kavita@nexushealth.co",
     "subject": "Q3 Contract Design Sprints",
     "service": "UI/UX Design",
-    "budget": "$10,000+",
+    "budget": "₹1,50,000+",
     "message": "Are you currently available for Q3 contract design sprints for our patient wellness portal?",
     "read": true,
     "starred": false,
@@ -674,7 +713,7 @@ export const INITIAL_INQUIRIES: InquiryMessage[] = [
     "email": "rohan@fintrack.app",
     "subject": "FinTrack 2.0 Web Dashboard Redesign",
     "service": "Mobile App Design",
-    "budget": "$5,000 - $10,000",
+    "budget": "₹50,000 - ₹1,00,000",
     "message": "Hey Ashhar! Would love to discuss a complete web app redesign for FinTrack 2.0 and interactive chart dashboards.",
     "read": false,
     "starred": true,

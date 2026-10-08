@@ -91,6 +91,15 @@ export interface InquiryMessage {
   replyHistory?: MessageReply[];
 }
 
+export interface WhyChooseItem {
+  id: string;
+  title: string;
+  desc: string;
+  iconName: string;
+  color: string;
+  order: number;
+}
+
 export interface InfoChip {
   id: string;
   icon: string;
@@ -153,6 +162,7 @@ export interface PortfolioProfile {
   resumeFileUrl: string;
   speechBubbleText: string;
   heroImageUrl: string;
+  aboutImageUrl?: string;
   location: string;
   education: string;
   obsession: string;
@@ -170,6 +180,9 @@ export interface PortfolioProfile {
   ctaHeadline: string;
   ctaHighlightedWord: string;
   ctaSubtext: string;
+  whyChooseBadge?: string;
+  whyChooseTitle?: string;
+  whyChooseSubtitle?: string;
 }
 
 export interface SeoSettings {

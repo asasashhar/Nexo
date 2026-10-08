@@ -106,13 +106,36 @@ export const VideoUploadField: React.FC<VideoUploadFieldProps> = ({
   );
 
   return (
-    <div className={`space-y-2 ${className}`}>
+    <div className={`space-y-2 text-white ${className}`}>
       {/* Label Bar */}
       <div className="flex items-center justify-between">
-        <label className="block text-xs font-bold text-[#1F2A37] uppercase tracking-wider">
-          {label} {required && <span className="text-[#F2685F]">*</span>}
-        </label>
-        {sublabel && <span className="text-[11px] text-[#6B7280]">{sublabel}</span>}
+        <div>
+          <label className="text-xs font-semibold text-slate-200">
+            {label} {required && <span className="text-[#FF5A36]">*</span>}
+          </label>
+          {sublabel && <span className="text-[11px] text-slate-400 ml-1.5">{sublabel}</span>}
+        </div>
+
+        <div className="flex items-center gap-3">
+          {videoMediaAssets.length > 0 && (
+            <button
+              type="button"
+              onClick={() => setShowMediaPicker(!showMediaPicker)}
+              className="text-[11px] text-[#00E599] hover:underline font-semibold flex items-center gap-1 cursor-pointer"
+            >
+              <FolderOpen className="w-3.5 h-3.5" />
+              <span>Media Library ({videoMediaAssets.length})</span>
+            </button>
+          )}
+
+          <button
+            type="button"
+            onClick={() => setShowUrlFallback(!showUrlFallback)}
+            className="text-[11px] text-slate-400 hover:text-slate-200 flex items-center gap-1 cursor-pointer"
+          >
+            <span>{showUrlFallback ? 'Hide Link' : 'Paste Video URL'}</span>
+          </button>
+        </div>
       </div>
 
       {/* Hidden File Input */}
@@ -127,41 +150,40 @@ export const VideoUploadField: React.FC<VideoUploadFieldProps> = ({
       {/* Main Container */}
       {value ? (
         /* Video Preview Card */
-        <div className="relative rounded-2xl overflow-hidden border border-[#D8F2E9] bg-black shadow-sm group">
+        <div className="relative rounded-2xl overflow-hidden border border-slate-700 bg-black shadow-md group">
           <video
             src={value}
             controls
             playsInline
             preload="metadata"
-            className="w-full max-h-64 object-contain mx-auto"
+            className="w-full max-h-72 object-contain mx-auto"
           />
 
           {/* Top Badges & Actions */}
-          <div className="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none z-10">
-            <span className="bg-black/75 backdrop-blur-xs text-white text-[10px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
-              <Film className="w-3 h-3 text-[#4CC9A7]" />
-              <span>Video Ad Ready</span>
-            </span>
+          <div className="p-2.5 bg-[#0D121D] border-t border-slate-800 flex items-center justify-between gap-2">
+            <div className="flex items-center gap-1.5 text-[11px] text-[#00E599] font-medium truncate">
+              <Check className="w-3.5 h-3.5 flex-shrink-0" />
+              <span className="truncate">Video ad asset loaded</span>
+            </div>
 
-            <div className="flex items-center gap-1.5 pointer-events-auto">
+            <div className="flex items-center gap-2">
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={isProcessing}
-                className="bg-black/75 hover:bg-black text-white p-2 rounded-xl backdrop-blur-xs transition-colors cursor-pointer text-xs flex items-center gap-1 shadow-sm"
-                title="Replace video"
+                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-[#00E599]/15 text-[#00E599] hover:bg-[#00E599]/25 font-semibold text-[11px] transition-colors cursor-pointer border border-[#00E599]/30"
               >
-                <RefreshCw className={`w-3.5 h-3.5 ${isProcessing ? 'animate-spin' : ''}`} />
-                <span className="hidden sm:inline">Replace</span>
+                <RefreshCw className={`w-3 h-3 ${isProcessing ? 'animate-spin' : ''}`} />
+                <span>Replace Video</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => onChange('')}
-                className="bg-black/75 hover:bg-[#F2685F] text-white p-2 rounded-xl backdrop-blur-xs transition-colors cursor-pointer shadow-sm"
+                className="p-1.5 rounded-full text-slate-400 hover:text-red-400 hover:bg-slate-800 transition-colors cursor-pointer"
                 title="Remove video"
               >
-                <X className="w-3.5 h-3.5" />
+                <X className="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -172,29 +194,29 @@ export const VideoUploadField: React.FC<VideoUploadFieldProps> = ({
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
-          className={`relative rounded-2xl border-2 border-dashed transition-all p-6 text-center ${
+          className={`border-2 border-dashed rounded-2xl p-6 text-center transition-all flex flex-col items-center justify-center gap-2.5 ${
             isDragging
-              ? 'border-[#4CC9A7] bg-[#E8F7F2]/40 scale-[0.99]'
-              : 'border-[#D8F2E9] hover:border-[#4CC9A7]/60 bg-[#F7FCFA]'
+              ? 'border-[#00E599] bg-[#00E599]/10 scale-[1.01]'
+              : 'border-slate-700 bg-[#080B11] hover:border-[#00E599] hover:bg-[#0D121D]'
           }`}
         >
           {isProcessing ? (
-            <div className="py-8 flex flex-col items-center justify-center space-y-3">
-              <div className="w-10 h-10 border-3 border-[#4CC9A7] border-t-transparent rounded-full animate-spin" />
-              <p className="text-xs font-semibold text-[#1F2A37]">Processing video upload...</p>
-              <p className="text-[11px] text-[#6B7280]">Encoding preview and metadata...</p>
+            <div className="py-6 flex flex-col items-center justify-center space-y-3">
+              <div className="w-10 h-10 border-3 border-[#00E599] border-t-transparent rounded-full animate-spin" />
+              <p className="text-xs font-semibold text-white">Processing video upload...</p>
+              <p className="text-[11px] text-slate-400">Encoding preview and metadata...</p>
             </div>
           ) : (
-            <div className="space-y-4">
-              <div className="w-12 h-12 rounded-2xl bg-[#E8F7F2] text-[#4CC9A7] flex items-center justify-center mx-auto transition-transform group-hover:scale-105">
+            <>
+              <div className="w-12 h-12 rounded-2xl bg-[#FF5A36]/15 text-[#FF5A36] border border-[#FF5A36]/30 flex items-center justify-center shadow-xs">
                 <Film className="w-6 h-6" />
               </div>
 
               <div>
-                <p className="text-xs font-bold text-[#1F2A37]">
-                  Upload Video Ad file from your computer
+                <p className="text-xs font-bold text-white">
+                  Upload Video Ad file from your device
                 </p>
-                <p className="text-[11px] text-[#6B7280] mt-1">{helperText}</p>
+                <p className="text-[11px] text-slate-400 mt-0.5">{helperText}</p>
               </div>
 
               {/* Upload Actions */}
@@ -202,59 +224,53 @@ export const VideoUploadField: React.FC<VideoUploadFieldProps> = ({
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#4CC9A7] hover:bg-[#37B294] text-white text-xs font-bold transition-all shadow-xs cursor-pointer active:scale-95"
+                  className="inline-flex items-center gap-1.5 px-5 py-2 rounded-full bg-[#00E599] hover:bg-[#00B377] text-black text-xs font-bold transition-all shadow-md cursor-pointer active:scale-95"
                 >
                   <Upload className="w-3.5 h-3.5" />
                   <span>Choose Video File</span>
                 </button>
 
-                <button
-                  type="button"
-                  onClick={() => setShowMediaPicker(true)}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white hover:bg-gray-50 border border-gray-200 text-[#1F2A37] text-xs font-medium transition-colors cursor-pointer"
-                >
-                  <FolderOpen className="w-3.5 h-3.5 text-[#4CC9A7]" />
-                  <span>Media Library ({videoMediaAssets.length})</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setShowUrlFallback(!showUrlFallback)}
-                  className="text-[11px] text-[#6B7280] hover:text-[#1F2A37] underline px-2 py-1 cursor-pointer"
-                >
-                  {showUrlFallback ? 'Cancel link' : 'Or paste link'}
-                </button>
+                {videoMediaAssets.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => setShowMediaPicker(true)}
+                    className="inline-flex items-center gap-1 px-4 py-2 rounded-full border border-slate-700 text-slate-300 hover:text-white hover:bg-slate-800 text-xs font-semibold transition-colors cursor-pointer"
+                  >
+                    <FolderOpen className="w-3.5 h-3.5 text-[#00E599]" />
+                    <span>Media Library ({videoMediaAssets.length})</span>
+                  </button>
+                )}
               </div>
 
-              {/* Optional URL input fallback if user specifically prefers external URL */}
+              {/* Optional URL input fallback */}
               {showUrlFallback && (
                 <form
                   onSubmit={handleApplyFallbackUrl}
-                  className="mt-3 flex items-center gap-2 max-w-md mx-auto animate-in fade-in"
+                  className="mt-3 flex items-center gap-2 max-w-md w-full mx-auto"
                 >
                   <input
                     type="url"
                     value={fallbackUrl}
                     onChange={(e) => setFallbackUrl(e.target.value)}
                     placeholder="https://.../video.mp4"
-                    className="flex-1 px-3 py-1.5 rounded-lg border border-gray-200 text-xs outline-none focus:border-[#4CC9A7] bg-white"
+                    className="flex-1 px-3 py-1.5 rounded-xl border border-slate-700 text-xs outline-none focus:border-[#00E599] bg-[#0F1522] text-white"
                   />
                   <button
                     type="submit"
-                    className="px-3 py-1.5 rounded-lg bg-[#1F2A37] hover:bg-black text-white text-xs font-semibold cursor-pointer"
+                    className="px-4 py-1.5 rounded-xl bg-[#00E599] text-black text-xs font-bold hover:bg-[#00B377] cursor-pointer"
                   >
                     Apply
                   </button>
                 </form>
               )}
-            </div>
+            </>
           )}
         </div>
       )}
 
       {/* Upload Error Banner */}
       {uploadError && (
-        <div className="flex items-center gap-2 text-xs text-red-600 bg-red-50 p-2.5 rounded-xl border border-red-200">
+        <div className="flex items-center gap-2 text-xs text-red-400 bg-red-950/40 p-2.5 rounded-xl border border-red-800/60">
           <AlertCircle className="w-4 h-4 flex-shrink-0" />
           <span>{uploadError}</span>
         </div>
@@ -262,19 +278,19 @@ export const VideoUploadField: React.FC<VideoUploadFieldProps> = ({
 
       {/* Media Library Picker Modal */}
       {showMediaPicker && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl border border-gray-100 max-h-[85vh] flex flex-col">
-            <div className="flex items-center justify-between pb-4 border-b border-gray-100">
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-[#0F1522] rounded-3xl max-w-2xl w-full p-6 shadow-2xl border border-slate-700 max-h-[85vh] flex flex-col text-white">
+            <div className="flex items-center justify-between pb-4 border-b border-slate-800">
               <div className="flex items-center gap-2">
-                <Film className="w-5 h-5 text-[#4CC9A7]" />
-                <h3 className="text-base font-bold text-[#1F2A37]">
+                <Film className="w-5 h-5 text-[#FF5A36]" />
+                <h3 className="text-base font-bold text-white">
                   Select Video from Media Library
                 </h3>
               </div>
               <button
                 type="button"
                 onClick={() => setShowMediaPicker(false)}
-                className="p-1 rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 cursor-pointer"
+                className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -282,10 +298,10 @@ export const VideoUploadField: React.FC<VideoUploadFieldProps> = ({
 
             <div className="py-4 overflow-y-auto flex-1">
               {videoMediaAssets.length === 0 ? (
-                <div className="text-center py-12 text-[#6B7280]">
-                  <Film className="w-10 h-10 text-gray-300 mx-auto mb-2" />
+                <div className="text-center py-12 text-slate-400">
+                  <Film className="w-10 h-10 text-slate-600 mx-auto mb-2" />
                   <p className="text-sm font-semibold">No video assets in library yet</p>
-                  <p className="text-xs text-gray-400 mt-1">
+                  <p className="text-xs text-slate-500 mt-1">
                     Upload a video using the "Choose Video File" button above.
                   </p>
                 </div>
@@ -298,7 +314,7 @@ export const VideoUploadField: React.FC<VideoUploadFieldProps> = ({
                         onChange(asset.url);
                         setShowMediaPicker(false);
                       }}
-                      className="group border border-gray-200 hover:border-[#4CC9A7] rounded-2xl p-3 cursor-pointer hover:shadow-md transition-all flex flex-col justify-between bg-[#F7FCFA]"
+                      className="group border border-slate-800 hover:border-[#00E599] rounded-2xl p-3 cursor-pointer hover:shadow-lg transition-all flex flex-col justify-between bg-[#080B11]"
                     >
                       <div className="h-32 bg-black rounded-xl overflow-hidden relative flex items-center justify-center mb-2">
                         <video
@@ -306,15 +322,15 @@ export const VideoUploadField: React.FC<VideoUploadFieldProps> = ({
                           preload="metadata"
                           className="w-full h-full object-cover opacity-80"
                         />
-                        <div className="w-9 h-9 rounded-full bg-[#4CC9A7] text-white flex items-center justify-center shadow-md group-hover:scale-110 transition-transform z-10">
+                        <div className="w-9 h-9 rounded-full bg-[#FF5A36] text-white flex items-center justify-center shadow-md group-hover:scale-110 transition-transform z-10">
                           <Play className="w-4 h-4 fill-current ml-0.5" />
                         </div>
                       </div>
                       <div className="flex items-center justify-between text-xs">
-                        <div className="truncate font-semibold text-[#1F2A37]" title={asset.name}>
+                        <div className="truncate font-semibold text-white" title={asset.name}>
                           {asset.name}
                         </div>
-                        <span className="text-[10px] text-gray-400 flex-shrink-0">{asset.size}</span>
+                        <span className="text-[10px] text-slate-400 flex-shrink-0">{asset.size}</span>
                       </div>
                     </div>
                   ))}
@@ -322,11 +338,11 @@ export const VideoUploadField: React.FC<VideoUploadFieldProps> = ({
               )}
             </div>
 
-            <div className="pt-4 border-t border-gray-100 flex justify-end">
+            <div className="pt-4 border-t border-slate-800 flex justify-end">
               <button
                 type="button"
                 onClick={() => setShowMediaPicker(false)}
-                className="px-4 py-2 rounded-xl text-xs font-semibold text-gray-600 hover:bg-gray-100 cursor-pointer"
+                className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:bg-slate-800 cursor-pointer"
               >
                 Close
               </button>

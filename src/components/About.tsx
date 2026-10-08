@@ -1,182 +1,148 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { usePortfolio } from '../context/PortfolioContext';
 import {
-  MapPin,
-  GraduationCap,
-  Heart,
-  Coffee,
   Sparkles,
+  Zap,
+  Target,
+  Users,
   Award,
-  Star,
+  Globe,
+  Monitor,
+  Palette,
+  Film,
+  Box,
 } from 'lucide-react';
 
 export const About: React.FC = () => {
-  const { profile, infoChips } = usePortfolio();
-  const [plantState, setPlantState] = useState<'happy' | 'loved' | 'watered'>('happy');
-  const [bubbleText, setBubbleText] = useState('Hi!');
+  const { profile } = usePortfolio();
 
-  const handlePlantClick = () => {
-    if (plantState === 'happy') {
-      setPlantState('loved');
-      setBubbleText('Yay! ♡');
-    } else if (plantState === 'loved') {
-      setPlantState('watered');
-      setBubbleText('🌱✨');
-    } else {
-      setPlantState('happy');
-      setBubbleText('Hi!');
-    }
-  };
+  const studioCapabilities = [
+    { label: 'Web Architecture & Development', icon: Monitor, color: '#00E599' },
+    { label: 'Print & Digital Poster Art', icon: Palette, color: '#FF5A36' },
+    { label: 'Kinetic Motion & Reel Ads', icon: Film, color: '#06B6D4' },
+    { label: '3D Commercial Product Renders', icon: Box, color: '#A855F7' },
+  ];
 
-  const renderChipIcon = (iconName: string, color?: string) => {
-    const isAmber = color === 'amber';
-    const isCoral = color === 'coral';
-    const baseColor = isAmber ? 'text-amber-600' : isCoral ? 'text-[#F2685F]' : 'text-[#4CC9A7]';
-
-    switch (iconName) {
-      case 'MapPin':
-        return <MapPin className={`w-5 h-5 ${baseColor}`} />;
-      case 'GraduationCap':
-        return <GraduationCap className={`w-5 h-5 ${baseColor}`} />;
-      case 'Heart':
-        return <Heart className={`w-5 h-5 fill-current ${baseColor}`} />;
-      case 'Coffee':
-        return <Coffee className={`w-5 h-5 ${baseColor}`} />;
-      case 'Star':
-        return <Star className={`w-5 h-5 fill-current text-[#F5B301]`} />;
-      case 'Award':
-        return <Award className={`w-5 h-5 ${baseColor}`} />;
-      default:
-        return <Sparkles className={`w-5 h-5 ${baseColor}`} />;
-    }
-  };
+  const tools = [
+    'Figma',
+    'After Effects',
+    'Next.js',
+    'Blender 3D',
+    'Tailwind CSS',
+    'Premiere Pro',
+    'Illustrator',
+    'React',
+  ];
 
   return (
-    <section id="about" className="py-20 md:py-24 bg-white relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Title: Two-tone with Caveat teal and tiny coral heart */}
-        <div className="text-center mb-14">
-          <h2 className="text-3xl sm:text-4xl font-bold text-[#1F2A37]">
-            {profile.aboutTitle || 'About'}{' '}
-            <span className="font-script text-[#4CC9A7] text-4xl sm:text-5xl">
-              {profile.aboutHighlightedWord || 'Us'}
-            </span>{' '}
-            <span className="text-[#F2685F] text-2xl select-none inline-block animate-pulse">♡</span>
+    <section id="about" className="py-24 md:py-32 bg-[#080B11] relative overflow-hidden">
+      {/* Background glow mesh */}
+      <div className="absolute top-1/3 left-0 w-96 h-96 bg-[#00E599]/5 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute bottom-10 right-0 w-96 h-96 bg-[#FF5A36]/5 rounded-full blur-[140px] pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        {/* Section Header */}
+        <div className="text-center mb-16">
+          <div className="flex items-center justify-center gap-4 text-xs font-bold uppercase tracking-[0.3em] text-[#00E599] mb-3">
+            <span className="w-12 h-px bg-gradient-to-r from-transparent to-[#00E599]" />
+            <span>BEHIND THE CREATIVE</span>
+            <span className="w-12 h-px bg-gradient-to-l from-transparent to-[#00E599]" />
+          </div>
+
+          <h2 className="text-4xl sm:text-5xl font-black text-white tracking-tight font-sans">
+            About NEXO Studio
           </h2>
-          <p className="text-sm text-[#9CA3AF] mt-2">
-            {profile.aboutSubtitle || 'A little glimpse into who we are and what drives our studio craft.'}
+          <p className="text-sm sm:text-base text-slate-400 mt-3 max-w-xl mx-auto leading-relaxed">
+            {profile.aboutSubtitle ||
+              'A passionate collective of designers, technologists, and storytellers turning visions into digital reality.'}
           </p>
         </div>
 
-        <div className="max-w-4xl mx-auto">
-          {/* Mascot & Bio Container */}
-          <div className="flex flex-col md:flex-row items-center gap-8 mb-12">
-            {/* Cute Smiling Plant Mascot in Teal Pot */}
-            <div
-              onClick={handlePlantClick}
-              title="Click to interact with Ashhar's studio plant!"
-              className="w-36 h-36 flex-shrink-0 bg-[#E8F7F2] rounded-3xl p-4 flex items-center justify-center shadow-inner relative group cursor-pointer hover:scale-105 active:scale-95 transition-all select-none"
-            >
-              <div className="absolute -top-2 -right-2 bg-white text-xs px-2.5 py-0.5 rounded-full border border-[#4CC9A7] text-[#4CC9A7] font-bold shadow-sm transition-all animate-bounce">
-                {bubbleText}
-              </div>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          {/* Left Column: Studio Team Visual Presentation */}
+          <div className="lg:col-span-6 relative">
+            <div className="relative rounded-3xl overflow-hidden border-2 border-slate-700/80 shadow-[0_20px_60px_rgba(0,0,0,0.8)] group hover:border-[#00E599]/50 transition-all duration-500">
+              <img
+                src={profile.aboutImageUrl || '/nexo-studio-team.jpg'}
+                alt="NEXO Studio Team Collaboration"
+                className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-700"
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).src = '/nexo-studio-team.jpg';
+                }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#080B11]/90 via-transparent to-black/20 pointer-events-none" />
 
-              <svg className="w-24 h-24 text-[#4CC9A7]" fill="none" viewBox="0 0 100 100">
-                {/* Pot */}
-                <path
-                  d="M28 55L34 85C34.5 87.5 36.5 89 39 89H61C63.5 89 65.5 87.5 66 85L72 55H28Z"
-                  fill="#37B294"
-                />
-                <rect fill="#4CC9A7" height="7" rx="3.5" width="50" x="25" y="50" />
-
-                {/* Pot Face */}
-                {plantState === 'loved' ? (
-                  <>
-                    <path
-                      d="M40 68Q43 65 46 68"
-                      stroke="#1F2A37"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                    />
-                    <path
-                      d="M54 68Q57 65 60 68"
-                      stroke="#1F2A37"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                    />
-                  </>
-                ) : (
-                  <>
-                    <circle cx="43" cy="68" fill="#1F2A37" r="2.5" />
-                    <circle cx="57" cy="68" fill="#1F2A37" r="2.5" />
-                  </>
-                )}
-
-                {/* Smile */}
-                <path
-                  d="M48 74C49.5 76 50.5 76 52 74"
-                  stroke="#1F2A37"
-                  strokeLinecap="round"
-                  strokeWidth="2"
-                />
-
-                {/* Blush cheeks */}
-                <ellipse cx="38" cy="71" fill="#F2685F" opacity="0.6" rx="2" ry="1" />
-                <ellipse cx="62" cy="71" fill="#F2685F" opacity="0.6" rx="2" ry="1" />
-
-                {/* Plant Leaves */}
-                <path d="M50 50V35" stroke="#248A71" strokeLinecap="round" strokeWidth="3" />
-                <path
-                  d="M50 35C45 22 26 25 32 38C35 44 47 42 50 35Z"
-                  fill={plantState === 'watered' ? '#4ade80' : '#75DBBC'}
-                />
-                <path
-                  d="M50 32C56 18 76 22 70 35C66 42 54 40 50 32Z"
-                  fill={plantState === 'watered' ? '#22c55e' : '#4CC9A7'}
-                />
-                <path
-                  d="M50 25C47 16 53 10 50 8C47 10 53 16 50 25Z"
-                  fill={plantState === 'watered' ? '#86efac' : '#A1E8D2'}
-                />
-              </svg>
-            </div>
-
-            {/* Bio Text */}
-            <div className="text-center md:text-left">
-              <p className="text-base sm:text-lg text-[#6B7280] leading-relaxed">
-                {profile.aboutBio}
-              </p>
-              <div className="mt-3 flex items-center justify-center md:justify-start gap-2 text-xs text-[#9CA3AF]">
-                <Sparkles className="w-3.5 h-3.5 text-[#4CC9A7]" />
-                <span>{profile.aboutPlantTip || 'Tip: Click the studio plant to give it some love!'}</span>
+              {/* Floating studio caption */}
+              <div className="absolute bottom-4 inset-x-4 bg-[#080B11]/90 backdrop-blur-md p-4 rounded-2xl border border-slate-700/80 text-left">
+                <div className="flex items-center justify-between text-xs mb-1">
+                  <span className="font-bold text-white uppercase tracking-wider">
+                    NEXO CREATIVE HEADQUARTERS
+                  </span>
+                  <span className="text-[#00E599] font-mono text-[11px] font-bold">24/7 GLOBAL</span>
+                </div>
+                <p className="text-xs text-slate-300">
+                  Where visionary concepts transform into polished digital products, eye-catching posters, and viral marketing ads.
+                </p>
               </div>
             </div>
           </div>
 
-          {/* Highlight Info Chips Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {infoChips.map((chip) => (
-              <div
-                key={chip.id}
-                className="bg-[#F7FCFA] border border-[#D8F2E9] rounded-2xl p-4 flex items-center gap-3 shadow-xs hover:shadow-md transition-all hover:-translate-y-0.5"
-              >
-                <div
-                  className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
-                    chip.color === 'coral'
-                      ? 'bg-[#FDECEA]'
-                      : chip.color === 'amber'
-                      ? 'bg-amber-50'
-                      : 'bg-[#E8F7F2]'
-                  }`}
-                >
-                  {renderChipIcon(chip.icon, chip.color)}
-                </div>
-                <div className="text-xs">
-                  <span className="text-[#9CA3AF] block font-medium">{chip.label}</span>
-                  <strong className="text-[#1F2A37] font-semibold">{chip.value}</strong>
-                </div>
+          {/* Right Column: Studio Narrative & Pillars */}
+          <div className="lg:col-span-6 space-y-6 text-left">
+            <div>
+              <span className="text-xs font-mono font-bold text-[#FF5A36] uppercase tracking-[0.2em] block mb-2">
+                IDEAS TO IMPACT
+              </span>
+              <h3 className="text-2xl sm:text-3xl font-black text-white font-sans leading-tight">
+                Creative Solutions for a Stronger Tomorrow.
+              </h3>
+            </div>
+
+            <p className="text-sm text-slate-300 leading-relaxed font-normal">
+              {profile.aboutBio ||
+                'NEXO is a multidisciplinary creative studio built for modern businesses. We combine strategic product thinking, high-end visual craftsmanship, and agile execution to deliver websites and marketing assets that stand out in crowded markets.'}
+            </p>
+
+            {/* Core Capabilities Checklist */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+              {studioCapabilities.map((cap, idx) => {
+                const Icon = cap.icon;
+                return (
+                  <div
+                    key={idx}
+                    className="flex items-center gap-3 p-3 bg-[#0F1522] rounded-xl border border-slate-800/80 text-xs text-slate-200"
+                  >
+                    <div
+                      className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                      style={{
+                        backgroundColor: `${cap.color}15`,
+                        color: cap.color,
+                      }}
+                    >
+                      <Icon className="w-4 h-4" />
+                    </div>
+                    <span className="font-semibold">{cap.label}</span>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Studio Tool Stack */}
+            <div className="pt-4 border-t border-slate-800/80">
+              <span className="text-[11px] font-mono font-bold text-slate-400 uppercase tracking-wider block mb-3">
+                STUDIO PRODUCTION STACK:
+              </span>
+              <div className="flex flex-wrap gap-2">
+                {tools.map((tool, idx) => (
+                  <span
+                    key={idx}
+                    className="text-xs font-semibold px-3 py-1 rounded-full bg-[#0F1522] text-slate-300 border border-slate-800 hover:border-[#00E599]/40 hover:text-[#00E599] transition-colors"
+                  >
+                    {tool}
+                  </span>
+                ))}
               </div>
-            ))}
+            </div>
           </div>
         </div>
       </div>

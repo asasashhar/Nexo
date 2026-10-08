@@ -92,14 +92,14 @@ function PortfolioAppContent() {
 
   // Public Portfolio View
   return (
-    <div className="min-h-screen bg-[#FAF9F5] text-[#4B5552] font-sans selection:bg-[#E8F7F2] selection:text-[#2D9A7A]">
+    <div className="min-h-screen bg-[#080B11] text-slate-300 font-sans selection:bg-[#00E599]/30 selection:text-[#00E599]">
       {/* Toast Notification */}
       <Toast show={toast.show} title={toast.title} message={toast.message} />
 
       {/* Floating Sticky Navigation Bar */}
       <Navbar
         onOpenAdmin={handleOpenAdmin}
-        onOpenContact={() => handleOpenContactWithService('Grow Your Reach')}
+        onOpenContact={() => handleOpenContactWithService('Web Design')}
       />
 
       {/* Conditional: Dedicated Service Works Page or Main Sections */}
@@ -114,17 +114,17 @@ function PortfolioAppContent() {
         <main>
           {/* Hero Section */}
           <Hero
-            onStartProject={() => handleOpenContactWithService('Grow Your Reach')}
+            onStartProject={() => handleOpenContactWithService('Web Design')}
             onSeeProcess={() => {
               const el = document.getElementById('process');
               if (el) el.scrollIntoView({ behavior: 'smooth' });
             }}
           />
 
-          {/* About Us Section (Directly after Hero as requested) */}
+          {/* About NEXO Studio & Team (Shown directly after the Home Page) */}
           <About />
 
-          {/* Services Section */}
+          {/* Services & Why Choose NEXO Section */}
           <Services onOpenServiceWorks={(serviceId: string) => setActiveServiceId(serviceId)} />
 
           {/* Selected Work Section */}
@@ -136,9 +136,9 @@ function PortfolioAppContent() {
           {/* Testimonials / What Clients Say Section */}
           <Testimonials onShowToast={showToast} />
 
-          {/* Contact Banner Section (The design below what clients say) */}
+          {/* Contact Banner Section */}
           <ContactBanner
-            onOpenContact={() => handleOpenContactWithService('Introductory Product Audit')}
+            onOpenContact={() => handleOpenContactWithService('Web Design')}
             onShowToast={showToast}
           />
         </main>
@@ -147,7 +147,7 @@ function PortfolioAppContent() {
       {/* Footer */}
       <Footer
         onOpenAdmin={handleOpenAdmin}
-        onOpenContact={() => handleOpenContactWithService('General Inquiry')}
+        onOpenContact={() => handleOpenContactWithService('Web Design')}
         onSelectService={(serviceId: string) => setActiveServiceId(serviceId)}
       />
 
